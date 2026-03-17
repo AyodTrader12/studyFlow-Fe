@@ -1,9 +1,11 @@
 import React from 'react'
+import { RouterProvider } from 'react-router-dom'
+import { router } from './router/Router'
 
 const App = () => {
   return (
     <div>
-      <h1 className='text-pink-500'>app</h1>
+     <RouterProvider router={router}/>
     </div>
   )
 }
