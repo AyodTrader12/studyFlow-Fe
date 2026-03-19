@@ -1,19 +1,28 @@
 import { createBrowserRouter } from "react-router-dom";
 import Mainlayout from "../layout/Mainlayout";
-import LandingPage from "../pages/LandingPage";
+import LandingPage from "../pages/Home";
 import Authlayout from "../layout/Authlayout";
 import Signup from "../pages/auth/Signup";
 import Verify from "../pages/auth/Verify";
 import Login from "../pages/auth/Login";
 import Dashboardlayout from "../layout/Dashboardlayout";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/dashboard/Dashboard";
+import Forgotpassword from "../pages/auth/Forgotpassword";
+import ResetPassword from "../pages/auth/ResetPassword";
+import Home from "../pages/Home"
+import AboutUs from "../pages/AboutUs";
+import Features from "../pages/Features";
+import Contact from "../pages/Contact";
 
 export const router = createBrowserRouter([
     { 
         path: "/",
         element:<Mainlayout/>,
         children:[
-            {index:true, path:"/", element:<LandingPage/>}
+            {index:true, path:"/", element:<Home/>},
+            {path:"/about",element:<AboutUs/>  },
+            {path:"/features",elememnt:<Features/>},
+            {path:"/ontact",element:<Contact/>}
         ]
     },
     {
@@ -22,14 +31,16 @@ export const router = createBrowserRouter([
         children:[
             {index:true, path:"/auth",element:<Signup/>},
             {path:"/auth/verify", element:<Verify/>},
-            {path:"/auth/login", element:<Login/>}
+            {path:"/auth/login", element:<Login/>},
+            {path:"/auth/forgot-password",element:<Forgotpassword/> },
+            {path:"/auth/reset-password",element:<ResetPassword/>}
         ]
     },
     {
         path:"/dashboard",
         element:<Dashboardlayout/>,
         children:[
-            {index:true,path:"/dashboard",element:<Dashboard/>}
+            {index:true,element:<Dashboard/>}
         ]
     }
 ])

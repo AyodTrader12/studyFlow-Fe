@@ -3,8 +3,8 @@ import React from 'react'
 const LandingPage = () => {
   return (
     <div>
-      Landingpage
-    </div>
+      Home    
+      </div>
   )
 }
 

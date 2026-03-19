@@ -55,7 +55,7 @@ const Login = () => {
     try {
       const user = await signInWithGoogle();
       // Google accounts are always verified — go straight to dashboard
-      onNavigate("dashboard", { name: user.displayName, email: user.email });
+      navigate("/dashboard", { name: user.displayName, email: user.email });
     } catch (error) {
       if (error.code !== "auth/popup-closed-by-user") {
         setErrors({ general: "Google sign-in failed. Please try again." });
@@ -66,7 +66,7 @@ const Login = () => {
   };
  
   return (
-   <div className="min-h-screen bg-white flex flex-col items-center justify-start pt-10 px-4">
+   <div className="min-h-screen bg-white flex flex-col items-center justify-start  px-4">
       {/* Logo */}
    
            <div className="flex flex-col items-center mb-6 w-full h-30">
@@ -96,7 +96,7 @@ const Login = () => {
             <input
               type="email" name="email" placeholder="Enter Email"
               value={form.email} onChange={handleChange}
-              className={`w-full px-5 py-4 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
+              className={`w-full px-4 py-3 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
                 errors.email ? "border-red-400 bg-red-50" : "border-gray-300 bg-white focus:border-[#1a2a5e]"
               }`}
             />
@@ -109,7 +109,7 @@ const Login = () => {
                 type={showPassword ? "text" : "password"}
                 name="password" placeholder="Enter Password"
                 value={form.password} onChange={handleChange}
-                className={`w-full px-5 py-4 pr-12 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
+                className={`w-full px-4 py-3 pr-12 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
                   errors.password ? "border-red-400 bg-red-50" : "border-gray-300 bg-white focus:border-[#1a2a5e]"
                 }`}
               />
@@ -138,14 +138,14 @@ const Login = () => {
           </div>
  
           <div className="text-right -mt-1">
-            <button type="button" onClick={() => onNavigate?.("forgot-password")} className="text-sm text-[#1a2a5e] hover:underline font-medium">
+            <Link to="/auth/forgot-password" className="text-sm text-[#1a2a5e] hover:underline font-medium">
               Forgot Password?
-            </button>
+            </Link>
           </div>
  
           <button
             type="submit" disabled={loading || googleLoading}
-            className="w-full py-4 rounded-2xl bg-[#1a2a5e] text-white font-bold text-base tracking-wide transition hover:bg-[#14234d] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full py-4 rounded-2xl bg-[#1a2a5e] text-white font-bold text-base tracking-wide transition  hover:bg-gray-900  active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
@@ -192,7 +192,7 @@ const Login = () => {
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
           )}
-          {googleLoading ? "Connecting to Google..." : "Continue with Google"}
+          {googleLoading ? "Connecting to Google..." : "Login with Google"}
         </button>
  
       </div>

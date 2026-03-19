@@ -54,7 +54,7 @@ const Signup = () => {
     try {
       const user = await signInWithGoogle();
       // Google accounts are pre-verified — go straight to dashboard (or onboarding)
-      navigate("dashboard", { state: { name: user.displayName, email: user.email } });
+      navigate("/dashboard", { state: { name: user.displayName, email: user.email } });
     } catch (error) {
       if (error.code !== "auth/popup-closed-by-user") {
         setErrors({ general: "Google sign-up failed. Please try again." });
@@ -65,7 +65,7 @@ const Signup = () => {
   };
  
   return (
-   <div className="min-h-screen bg-white flex flex-col items-center justify-start pt-10 px-4">
+   <div className="min-h-screen bg-white flex flex-col items-center justify-start    px-4">
       {/* Logo */}
       <div className="flex flex-col items-center mb-6 w-full h-30">
         <img src={logo} alt="Logo" className="w-80 h-70 " />
@@ -92,7 +92,7 @@ const Signup = () => {
             <input
               type="text" name="name" placeholder="Enter Name"
               value={form.name} onChange={handleChange}
-              className={`w-full px-5 py-4 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
+              className={`w-full px-4 py-3 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
                 errors.name ? "border-red-400 bg-red-50" : "border-gray-300 bg-white focus:border-[#1a2a5e]"
               }`}
             />
@@ -104,7 +104,7 @@ const Signup = () => {
             <input
               type="email" name="email" placeholder="Enter Email"
               value={form.email} onChange={handleChange}
-              className={`w-full px-5 py-4 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
+              className={`w-full px-4 py-3 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
                 errors.email ? "border-red-400 bg-red-50" : "border-gray-300 bg-white focus:border-[#1a2a5e]"
               }`}
             />
@@ -118,7 +118,7 @@ const Signup = () => {
                 type={showPassword ? "text" : "password"}
                 name="password" placeholder="Create Password"
                 value={form.password} onChange={handleChange}
-                className={`w-full px-5 py-4 pr-12 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
+                className={`w-full px-4 py-3 pr-12 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
                   errors.password ? "border-red-400 bg-red-50" : "border-gray-300 bg-white focus:border-[#1a2a5e]"
                 }`}
               />
@@ -153,7 +153,7 @@ const Signup = () => {
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword" placeholder="Confirm Password"
                 value={form.confirmPassword} onChange={handleChange}
-                className={`w-full px-5 py-4 pr-12 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
+                className={`w-full px-4 py-3 pr-12 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
                   errors.confirmPassword ? "border-red-400 bg-red-50" : "border-gray-300 bg-white focus:border-[#1a2a5e]"
                 }`}
               />
@@ -184,7 +184,7 @@ const Signup = () => {
           <button
             type="submit"
             disabled={loading || googleLoading}
-            className="w-full py-4 mt-1 rounded-2xl bg-[#1a2a5e] text-white font-bold text-base tracking-wide transition hover:bg-[#14234d] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full py-3 mt-1 rounded-2xl bg-[#1a2a5e] text-white font-bold text-base tracking-wide transition  hover:bg-gray-900  active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
