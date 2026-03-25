@@ -137,7 +137,7 @@ const testimonials = [
 
             <h1 className="
               font-semibold text-[#1a2a5e] 
-              text-2xl sm:text-3xl md:text-4xl lg:text-[40px]
+              text-2xl sm:text-3xl md:text-4xl lg:text-[35px]
               leading-[1.15] 
               max-w-md sm:max-w-lg md:max-w-xl lg:max-w-[650px]
               mx-auto lg:mx-0

@@ -86,7 +86,7 @@ export default function Header() {
           <NavLink to="/" className="flex items-center gap-2 no-underline flex-shrink-0">
             {/* Book SVG matching the StudyFlow brand */}
             <div className="relative">
-              <img src={logo} alt="StudyFlow Logo" className="w-55 h-35 "/> 
+              <img src={logo} alt="StudyFlow Logo" className="w-35 h-10 "/> 
             </div>
           
           </NavLink>
