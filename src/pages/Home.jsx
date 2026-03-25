@@ -1,10 +1,129 @@
 import React from 'react'
 import heroImage from '../assets/heroImage.png'
+import {FaCheck} from 'react-icons/fa'
+import { NavLink } from 'react-router-dom';
+import organize from '../assets/organizeIcon.png'
+import time from '../assets/timeIcon.png'
+import smart from '../assets/smartIcon.png'
+import progress from '../assets/progressIcon.png'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/autoplay'
+import { useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
+
+const faqs = [
+  {
+    question: "Is StudyFlow really free to use?",
+    answer: "Yes, StudyFlow is completely free for all students. You can access resources, past questions, and features without paying.",
+  },
+  {
+    question: "What subjects are available on StudyFlow?",
+    answer: "We cover all major secondary school subjects including Mathematics, English, Sciences, and Commercial subjects.",
+  },
+  {
+    question: "Can I upload my own study materials?",
+    answer: "Yes, students can share helpful notes and resources with others on the platform.",
+  },
+  {
+    question: "How do I track my study progress?",
+    answer: "Your dashboard shows your activity, saved resources, and learning progress to help you stay on track.",
+  },
+  {
+    question: "Is StudyFlow available on mobile?",
+    answer: "Yes, StudyFlow works perfectly on mobile devices, tablets, and desktops.",
+  },
+];
 
 const Home = () => {
+  const features = [
+  {
+    id: "01",
+    title: "Stay Organized",
+    desc: "Keep all your study materials in one intuitive place. No more scattered files across internet or platforms.",
+    points: [
+      "Centralized resource library",
+      "Smart categorization and tagging",
+      "Instant access to everything you need",
+    ],
+    image: organize,
+    reverse: false,
+  },
+  {
+    id: "02",
+    title: "Save Time",
+    desc: "Spend less time searching and more time learning. Find exactly what you need in seconds, not minutes.",
+    points: [
+      "Advanced search and filtering",
+      "Quick access to recent materials",
+      "Personalized recommendations",
+    ],
+    image: time,
+    reverse: true,
+  },
+  {
+    id: "03",
+    title: "Study Smarter",
+    desc: "Eliminate distraction and focus on what truly matters. Our platform helps you concentrate on learning, not logistics.",
+    points: [
+      "Distraction-free study environment",
+      "Focused learning paths",
+      "Evidence-based study techniques",
+    ],
+    image: smart,
+    reverse: false,
+  },
+  {
+    id: "04",
+    title: "Track Your Progress",
+    desc: "See your growth in real-time. Monitor your learning journey and stay motivated with actionable insights.",
+    points: [
+      "Detailed progress analytics",
+      "Personalized achievement milestones",
+      "Motivation through visual feedback",
+    ],
+    image: progress,
+    reverse: true,
+  },
+];
+
+const testimonials = [
+  {
+    name: "Chidera Okafor",
+    school: "Government Secondary School, Lagos",
+    level: "SS3 Student",
+    text: "StudyFlow helped me find past WAEC questions for all my subjects in one place. My grades improved so much in just two months!",
+    initials: "CO",
+    color: "bg-blue-100 text-blue-700",
+  },
+  {
+    name: "Fatima Abdullahi",
+    school: "Federal Government College, Abuja",
+    level: "JSS2 Student",
+    text: "I used to spend hours looking for study notes online. Now I just open StudyFlow and everything is right there, organised perfectly.",
+    initials: "FA",
+    color: "bg-green-100 text-green-700",
+  },
+  {
+    name: "Emeka Nwosu",
+    school: "Lagos State Model College",
+    level: "SS1 Student",
+    text: "The community feature is amazing. I asked a question and got a clear answer within minutes. Highly recommend!",
+    initials: "EN",
+    color: "bg-orange-100 text-orange-700",
+  },
+];
+
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   return (
     <div>
-      <section className="bg-gray-50 py-4 sm:py-8 lg:py-6">
+      <section className="bg-gray-50 py-4 sm:py-5 lg:py-5">
       <div className="max-w-6xl mx-auto px-5 lg:px-12">
         
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
@@ -36,14 +155,16 @@ const Home = () => {
               and keep all your learning materials neatly organized for easy access.
             </p>
 
-            <button className="
-              mt-5
-              bg-[#1a2a5e] text-white 
-              px-5 py-2.5 text-sm cursor-pointer
-              rounded-md hover:bg-blue-800 transition
+            <NavLink
+            to="/signup" 
+            className="
+             inline-block mt-6
+             bg-[#1a2a5e] text-white 
+             px-8 py-2.5 text-sm cursor-pointer
+             rounded-md hover:bg-blue-800 transition
             ">
               Get Started
-            </button>
+            </NavLink>
           </div>
 
           {/* RIGHT */}
@@ -51,206 +172,204 @@ const Home = () => {
             <img
               src={heroImage}
               alt="StudyFlow Preview"
-              className="w-64  sm:w-72 md:w-80 lg:w-[400px]  object-cover"
+              className="w-74  sm:w-82 md:w-90 lg:w-[470px]  object-contain"
             />
           </div>
-
         </div>
       </div>
     </section>
-          {/* How it Works Section */}
-      <section className="bg-gray-50 py-24 px-8">
-        <div className="max-w-7xl mx-auto text-center mb-16">
-          <h2 className="text-3xl font-bold text-[#1a2b4b] mb-4">How StudyFlow Works</h2>
+        <section className="bg-white py-10">
+      <div className="max-w-6xl mx-auto px-5 lg:px-12">
+        
+        {/* Header */}
+        <div className="text-center mb-20">
+          <h2 className="text-2xl md:text-3xl font-semibold text-[#1a2a5e] mb-4">
+            Why Choose StudyFlow?
+          </h2>
           <p className="text-gray-500 max-w-2xl mx-auto">
-            Follow these simple steps to find, save, and manage your study resources with ease.
+            Experience a smarter way to organize, learn, and grow with tools built specifically for academic excellence.
           </p>
         </div>
 
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { step: '01', title: 'Search Resources', desc: 'Discover tutorials, notes and past questions tailored to your needs.', icon: '🔍' },
-            { step: '02', title: 'Save & Organize', desc: 'Keep important study material saved neatly in one place.', icon: '📁' },
-            { step: '03', title: 'Track Progress', desc: 'Monitor your learning progress and stay motivated.', icon: '📈' }
-          ].map((item, idx) => (
-            <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative pt-12">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#1a2b4b] text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold">
-                {item.step}
+        {/* Content */}
+        <div className="space-y-24">
+          {features.map((item, index) => (
+            <div
+              key={index}
+              className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${
+                item.reverse ? "lg:flex-row-reverse" : ""
+              }`}
+            >
+              
+              {/* TEXT */}
+              <div className={`${item.reverse ? "lg:order-2" : ""}`}>
+                <div className="flex items-center gap-4 mb-5">
+                  <span className="text-blue-600 font-bold text-lg">
+                    {item.id}
+                  </span>
+                  <h3 className="text-2xl md:text-2xl font-semibold text-[#1a2a5e]">
+                    {item.title}
+                  </h3>
+                </div>
+
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  {item.desc}
+                </p>
+
+                <ul className="space-y-4">
+                  {item.points.map((point, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      
+                      {/* Circle with check icon */}
+                      <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center mt-1">
+                        <FaCheck className="text-white text-[10px]" />
+                      </div>
+
+                      <span className="text-gray-600 text-sm">
+                        {point}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="text-4xl mb-6 flex justify-center">
-                <div className="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center">
-                  {item.icon}
+
+              {/* IMAGE PLACEHOLDER */}
+              <div className={`flex justify-center ${item.reverse ? "lg:justify-start" : "lg:justify-end"}`}>
+                <div className="w-72 h-72 bg-blue-100 rounded-2xl flex items-center justify-center">
+                  <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-72 md: w-80 object-contain"
+                  />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-[#1a2b4b] mb-4">{item.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+        <section className="max-w-6xl mx-auto py-15 px-5 lg:px-12">
+      
+      {/* Header */}
+      <div className="text-center mb-12">
+        <h2 className="text-2xl md:text-3xl font-semibold text-[#1a2a5e] mb-3">
+          What Students Are Saying
+        </h2>
+        <p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed">
+          Thousands of students across Nigeria trust StudyFlow to help them prepare, study, and succeed.
+        </p>
+      </div>
+
+      {/* Slider */}
+      <Swiper
+        modules={[Autoplay]}
+        spaceBetween={20}
+        slidesPerView={1}
+        loop={true}
+        speed={1000}
+        autoplay={{
+          delay: 1500,
+          disableOnInteraction: false,
+        }}
+        breakpoints={{
+          768: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
+        }}
+      >
+        {testimonials.map((item, index) => (
+          <SwiperSlide key={index}>
+            <div className="h-full flex flex-col gap-4 p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition">
+              
+              {/* Stars */}
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                ))}
+              </div>
+
+              {/* Text */}
+              <p className="text-sm text-gray-600 leading-relaxed italic">
+                "{item.text}"
+              </p>
+
+              {/* User */}
+              <div className="flex items-center gap-3 mt-auto pt-3 border-t border-gray-100">
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold ${item.color}`}>
+                  {item.initials}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#1a2a5e]">
+                    {item.name}
+                  </p>
+                  <p className="text-[10px] text-gray-400">
+                    {item.level} · {item.school}
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+    </section>
+        <section className="bg-gray-50 py-15">
+      <div className="max-w-6xl mx-auto px-5 lg:px-12">
+        
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-2xl md:text-3xl font-semibold text-[#1a2a5e] mb-3">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-gray-500 text-sm max-w-md mx-auto">
+            Everything you need to know about using StudyFlow.
+          </p>
+        </div>
+
+        {/* FAQ List */}
+        <div className="space-y-4">
+          {faqs.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white border border-gray-100 rounded-xl shadow-sm"
+            >
+              
+              {/* Question */}
+              <button
+                onClick={() => toggleFAQ(index)}
+                className="w-full flex justify-between items-center px-5 py-4 text-left"
+              >
+                <span className="text-sm md:text-base font-semibold text-[#1a2a5e]">
+                  {item.question}
+                </span>
+
+                <FaChevronDown
+                  className={`text-gray-400 transition-transform duration-300 ${
+                    openIndex === index ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Answer */}
+              <div
+                className={`px-5 overflow-hidden transition-all duration-300 ${
+                  openIndex === index ? "max-h-40 pb-4" : "max-h-0"
+                }`}
+              >
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {item.answer}
+                </p>
+              </div>
+
             </div>
           ))}
         </div>
 
-        <div className="mt-16 flex justify-center">
-          <button className="bg-[#1a2b4b] text-white px-8 py-3 rounded-md font-semibold hover:hover:bg-blue-800 transition cursor-pointer">
-            Get Started
-          </button>
-        </div>
-      </section>
-      {/* Why Choose StudyFlow Section */}
-<section className="py-16 bg-white">
-  <div className="max-w-7xl mx-auto px-6">
-    
-    {/* Header */}
-    <div className="text-center mb-16">
-      <h2 className="text-4xl font-bold text-gray-900 mb-4">
-        Why Choose StudyFlow
-      </h2>
-      <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-        Experience a smarter way to organize, learn, and grow with tools built 
-        specifically for academic excellence.
-      </p>
-    </div>
-
-    <div className="space-y-20">
-
-      {/* 01 Stay Organized */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div>
-          <div className="flex items-center gap-4 mb-6">
-            <span className="text-3xl font-bold text-blue-600">01</span>
-            <h3 className="text-3xl font-semibold text-gray-900">Stay Organized</h3>
-          </div>
-          <p className="text-gray-600 text-lg mb-6">
-            Keep all your study materials in one intuitive place. 
-            No more scattered files across internet or platforms.
-          </p>
-          <ul className="space-y-3">
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Centralized resource library
-            </li>
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Smart Categorization and tagging
-            </li>
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Instant access to everything you need
-            </li>
-          </ul>
-        </div>
-
-        <div className="flex justify-center lg:justify-end">
-          <div className="w-80 h-80 bg-blue-50 rounded-3xl flex items-center justify-center">
-            {/* Replace with your actual image later */}
-            <div className="text-8xl">📁💡</div>
-          </div>
-        </div>
       </div>
-
-      {/* 02 Save Time */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div className="lg:order-2">
-          <div className="flex items-center gap-4 mb-6">
-            <span className="text-3xl font-bold text-blue-600">02</span>
-            <h3 className="text-3xl font-semibold text-gray-900">Save Time</h3>
-          </div>
-          <p className="text-gray-600 text-lg mb-6">
-            Spend less time searching and more time learning. 
-            Find exactly what you need in seconds, not minutes.
-          </p>
-          <ul className="space-y-3">
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Advanced search and filtering
-            </li>
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Quick access to recent materials
-            </li>
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Personalized recommendations
-            </li>
-          </ul>
-        </div>
-
-        <div className="flex justify-center lg:justify-start">
-          <div className="w-80 h-80 bg-amber-50 rounded-3xl flex items-center justify-center">
-            <div className="text-8xl">⏱️⚡</div>
-          </div>
-        </div>
-      </div>
-
-      {/* 03 Study Smarter */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div>
-          <div className="flex items-center gap-4 mb-6">
-            <span className="text-3xl font-bold text-blue-600">03</span>
-            <h3 className="text-3xl font-semibold text-gray-900">Study Smarter</h3>
-          </div>
-          <p className="text-gray-600 text-lg mb-6">
-            Eliminate distraction and focus on what truly matters. 
-            Our platform helps you concentrate on learning, not logistics.
-          </p>
-          <ul className="space-y-3">
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Distraction-free study environment
-            </li>
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Focused learning paths
-            </li>
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Evidence-based study techniques
-            </li>
-          </ul>
-        </div>
-
-        <div className="flex justify-center lg:justify-end">
-          <div className="w-80 h-80 bg-purple-50 rounded-3xl flex items-center justify-center">
-            <div className="text-8xl">🧠🎓</div>
-          </div>
-        </div>
-      </div>
-
-      {/* 04 Track Your Progress */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div className="lg:order-2">
-          <div className="flex items-center gap-4 mb-6">
-            <span className="text-3xl font-bold text-blue-600">04</span>
-            <h3 className="text-3xl font-semibold text-gray-900">Track Your Progress</h3>
-          </div>
-          <p className="text-gray-600 text-lg mb-6">
-            See your growth in real-time. Monitor your learning journey 
-            and stay motivated with actionable insights.
-          </p>
-          <ul className="space-y-3">
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Detailed progress analytics
-            </li>
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Personalized achievement milestones
-            </li>
-            <li className="flex items-start gap-3 text-gray-600">
-              <span className="text-emerald-500 mt-1">•</span>
-              Motivation through visual feedback
-            </li>
-          </ul>
-        </div>
-
-        <div className="flex justify-center lg:justify-start">
-          <div className="w-80 h-80 bg-emerald-50 rounded-3xl flex items-center justify-center">
-            <div className="text-8xl">📊🚀</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
+    </section>
     </div>
   )
 }
