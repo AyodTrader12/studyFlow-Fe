@@ -106,7 +106,7 @@ export default function Header() {
               ))}
             </nav>
             <NavLink
-              to="/signup"
+              to="/auth"
               className="inline-block px-5 py-2.5 rounded-lg bg-[#1a2a5e] text-white text-sm font-bold tracking-wide transition hover:bg-[#14234d] active:scale-[0.97] no-underline"
             >
               Get Started
@@ -161,7 +161,7 @@ export default function Header() {
               ))}
             </nav>
             <NavLink
-              to="/signup"
+              to="/auth"
               className="mt-4 block text-center px-5 py-3 rounded-lg bg-[#1a2a5e] text-white text-sm font-bold tracking-wide transition hover:bg-[#14234d] no-underline"
               onClick={() => setMenuOpen(false)}
             >
