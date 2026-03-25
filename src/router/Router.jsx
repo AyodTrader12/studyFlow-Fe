@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Mainlayout from "../layout/Mainlayout";
-import LandingPage from "../pages/Home";
+
 import Authlayout from "../layout/Authlayout";
 import Signup from "../pages/auth/Signup";
 import Verify from "../pages/auth/Verify";
@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
             {index:true, path:"/", element:<Home/>},
             {path:"/about",element:<AboutUs/>  },
             {path:"/features",elememnt:<Features/>},
-            {path:"/ontact",element:<Contact/>}
+            {path:"/contact",element:<Contact/>}
         ]
     },
     {

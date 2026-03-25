@@ -142,8 +142,11 @@ const Forgotpassword = () => {
                 Try again
               </button>
             </p>
+             
+     
           </div>
         </>
+        
       )}
  
       

@@ -77,7 +77,7 @@ const Signup = () => {
         <p className="text-[#1a2a5e] mt-1 text-md">Create an account to Get Started</p>
       </div>
  
-      <div className="w-full max-w-xl bg-white rounded-3xl shadow-lg px-8 py-8">
+      <div className="w-full max-w-xl bg-white rounded-3xl shadow-lg px-8 py-8 mb-3">
         {errors.general && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm text-center">
             {errors.general}
@@ -235,7 +235,8 @@ const Signup = () => {
         </button>
  
       </div>
- 
+   <p className="text-xs text-gray-400 mt-2 pb-3 text-center">© {new Date().getFullYear()} StudyFlow. All rights reserved.</p>
+     
  
     </div>
   )
