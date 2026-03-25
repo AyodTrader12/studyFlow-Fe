@@ -1,10 +1,12 @@
 import { useState } from "react";
 
 const Contact = () => {
+
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
 
   const validate = () => {
     const e = {};
