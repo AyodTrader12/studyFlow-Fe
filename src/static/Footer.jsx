@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-
+import logo from "../assets/footerlogo.png"
 const quickLinks = [
   { label: "Home", to: "/" },
   { label: "About", to: "/about" },
@@ -15,24 +15,16 @@ const legalLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1a2a5e] text-white">
-      <div className="max-w-6xl mx-auto px-6 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+    <footer className="bg-[#1a2a5e] text-white ">
+      <div className="max-w-6xl  mx-auto px-2 justify-center py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-16">
 
         {/* ── Brand col ── */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col items-center gap-4 text-center justify-start max-w-[300px]">
           {/* Logo */}
-          <NavLink to="/" className="flex items-center gap-2 no-underline w-fit">
-            <svg width="34" height="34" viewBox="0 0 48 48" fill="none">
-              <path d="M8 12C8 10.3 9.3 9 11 9H24V39H11C9.3 39 8 37.7 8 36V12Z" fill="white"/>
-              <path d="M40 12C40 10.3 38.7 9 37 9H24V39H37C38.7 39 40 37.7 40 36V12Z" fill="white" opacity="0.6"/>
-              <path d="M22 6L24 9L26 6" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round"/>
-            </svg>
-            <div className="flex flex-col leading-none">
-              <span className="text-base font-extrabold text-white tracking-tight">StudyFlow</span>
-              <span className="text-[9px] text-blue-200 tracking-wide">Learn Smarter. Study Better.</span>
-            </div>
+          <NavLink to="/" className="flex items-center gap-2 no-underline ">
+         <img src={logo} alt="StudyFlow Logo" className="max-w-[300px]" />
           </NavLink>
-          <p className="text-sm text-blue-200 leading-relaxed max-w-[200px]">
+          <p className="text-sm text-blue-200 leading-relaxed max-w-[250px]">
             Your smart companion for finding study resources in seconds.
           </p>
         </div>
