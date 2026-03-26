@@ -32,8 +32,8 @@ const Forgotpassword = () => {
   return (
   <div className="min-h-screen bg-white flex flex-col items-center justify-start px-4">
       {/* Logo */}
-    <div className="flex flex-col items-center mb-6 w-full h-30">
-           <img src={logo} alt="Logo" className="w-80 h-70 " />
+    <div className="flex flex-col items-center mb-10 w-full h-10 pt-2">
+           <img src={logo} alt="Logo" className="w-60 h-15" />
          
          </div>
       {!sent ? (

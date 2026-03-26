@@ -3,7 +3,7 @@ import { signUp,signInWithGoogle } from "../../Firebase"
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/studylogo.png"
 const Signup = () => {
-    const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "" });
+    const [form, setForm] = useState({ name: "", email: "",schoolName:"", password: "", confirmPassword: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -14,7 +14,9 @@ const Signup = () => {
     const e = {};
     if (!form.name.trim()) e.name = "Name is required";
     if (!form.email.trim()) e.email = "Email is required";
+    
     else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Enter a valid email";
+    if (!form.schoolName.trim()) e.schoolName = "School name is required";
     if (!form.password) e.password = "Password is required";
     else if (form.password.length < 6) e.password = "Password must be at least 6 characters";
     if (!form.confirmPassword) e.confirmPassword = "Please confirm your password";
@@ -34,7 +36,7 @@ const Signup = () => {
     if (Object.keys(validationErrors).length > 0) { setErrors(validationErrors); return; }
     setLoading(true);
     try {
-      const user = await signUp(form.name, form.email, form.password);
+      const user = await signUp(form.name, form.email,form.schoolName, form.password);
       navigate("/auth/verify", { state: { name: user.displayName, email: user.email } });
     } catch (error) {
       const msg =
@@ -67,14 +69,14 @@ const Signup = () => {
   return (
    <div className="min-h-screen bg-white flex flex-col items-center justify-start    px-4">
       {/* Logo */}
-      <div className="flex flex-col items-center mb-6 w-full h-30">
-        <img src={logo} alt="Logo" className="w-80 h-70 " />
+      <div className="flex flex-col items-center mb-10  w-full h-10 pt-2">
+        <img src={logo} alt="Logo" className="w-60 h-15 " />
       
       </div>
  
       <div className="text-center mb-6">
         
-        <p className="text-[#1a2a5e] mt-1 text-md">Create an account to Get Started</p>
+        <p className="text-[#1a2a5e] mt-2 text-md">Create an account to Get Started</p>
       </div>
  
       <div className="w-full max-w-xl bg-white rounded-3xl shadow-lg px-8 py-8 mb-3">
@@ -109,6 +111,17 @@ const Signup = () => {
               }`}
             />
             {errors.email && <p className="text-red-500 text-xs mt-1 ml-2">{errors.email}</p>}
+          </div>
+          {/* School Name */}
+          <div>
+            <input
+              type="text" name="schoolName" placeholder="Enter School Name"
+              value={form.schoolName} onChange={handleChange}
+              className={`w-full px-4 py-3 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
+                errors.schoolName ? "border-red-400 bg-red-50" : "border-gray-300 bg-white focus:border-[#1a2a5e]"
+              }`}
+            />
+            {errors.schoolName && <p className="text-red-500 text-xs mt-1 ml-2">{errors.schoolName}</p>}
           </div>
  
           {/* Password */}
