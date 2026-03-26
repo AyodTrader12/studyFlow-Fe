@@ -16,7 +16,6 @@ const Signup = () => {
     if (!form.email.trim()) e.email = "Email is required";
     
     else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Enter a valid email";
-    if (!form.schoolName.trim()) e.schoolName = "School name is required";
     if (!form.password) e.password = "Password is required";
     else if (form.password.length < 6) e.password = "Password must be at least 6 characters";
     if (!form.confirmPassword) e.confirmPassword = "Please confirm your password";
@@ -115,7 +114,7 @@ const Signup = () => {
           {/* School Name */}
           <div>
             <input
-              type="text" name="schoolName" placeholder="Enter School Name"
+              type="text" name="schoolName" placeholder="Enter School Name (Optional)"
               value={form.schoolName} onChange={handleChange}
               className={`w-full px-4 py-3 rounded-2xl border text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:ring-2 focus:ring-[#1a2a5e]/30 ${
                 errors.schoolName ? "border-red-400 bg-red-50" : "border-gray-300 bg-white focus:border-[#1a2a5e]"
