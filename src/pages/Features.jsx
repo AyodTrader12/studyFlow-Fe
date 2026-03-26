@@ -81,7 +81,7 @@ const Features = () => {
           StudyFlow gives secondary school students the tools, resources, and community to make learning faster, easier, and more enjoyable.
         </p>
         <NavLink
-          to="/signup"
+          to="/auth"
           className="inline-block px-7 py-3.5 rounded-lg bg-white text-[#1a2a5e] font-bold text-sm tracking-wide transition hover:bg-blue-50 active:scale-[0.97] no-underline"
         >
           Get Started 

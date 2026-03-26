@@ -50,10 +50,10 @@ const Contact = () => {
         </h1>
 
         {/* ── Info Cards — always in a row ── */}
-        <div className="flex flex-row gap-10 mb-14">
+        <div className="flex flex-col md:flex-row gap-10 mb-14">
           {/* Email */}
           <div className="flex-1 flex flex-col items-center text-center py-6 px-5 rounded-xl border border-gray-100 shadow-md">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="mb-2">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" className="mb-2">
               <rect x="2" y="4" width="20" height="16" rx="2.5" stroke="#3b6fd4" strokeWidth="1.6" fill="none"/>
               <path d="M2 7.5l10 7 10-7" stroke="#3b6fd4" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
@@ -63,7 +63,7 @@ const Contact = () => {
 
           {/* Phone */}
           <div className="flex-1 flex flex-col items-center text-center py-6 px-5 rounded-xl border border-gray-100 shadow-md">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="mb-2">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" className="mb-2">
               <path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.24 11.4 11.4 0 003.6.6 1 1 0 011 1V21a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.6 3.6a1 1 0 01-.25 1l-2.25 2.2z" stroke="#3b6fd4" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <p className="text-sm font-bold text-[#1a2a5e] mb-0.5">Phone</p>
@@ -72,7 +72,7 @@ const Contact = () => {
 
           {/* Address */}
           <div className="flex-1 flex flex-col items-center text-center py-6 px-5 rounded-xl border border-gray-100 shadow-md">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="mb-2">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" className="mb-2">
               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="#3b6fd4" strokeWidth="1.6" fill="none" strokeLinejoin="round"/>
               <circle cx="12" cy="9" r="2.5" stroke="#3b6fd4" strokeWidth="1.6" fill="none"/>
             </svg>

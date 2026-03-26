@@ -80,13 +80,13 @@ export default function Header() {
       `}</style>
 
       <header className="w-full bg-white border-b border-gray-100 fixed top-0 z-50 shadow-sm">
-        <div className="max-w-6xl mx-auto px-5 h-16 lg:px-12 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
 
           {/* ── Logo ── */}
           <NavLink to="/" className="flex items-center gap-2 no-underline flex-shrink-0">
             {/* Book SVG matching the StudyFlow brand */}
             <div className="relative">
-              <img src={logo} alt="StudyFlow Logo" className="w-35 h-10 "/> 
+              <img src={logo} alt="StudyFlow Logo" className="w-45 h-10 "/> 
             </div>
           
           </NavLink>
