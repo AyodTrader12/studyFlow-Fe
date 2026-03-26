@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from "react-router-dom";
+import featureImage from "../assets/featureImage.jpg"
 
 const features = [
   {
@@ -70,28 +71,48 @@ const steps = [
 const Features = () => {
   return (
     <main className="min-h-screen bg-white">
+      <section className="bg-[#1a2a5e] py-12 px-6">
+  <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center">
+    
+    {/* ── Left: Text ── */}
+    <div className="text-center md:text-left">
+      <p className="text-blue-300 text-sm font-semibold tracking-widest uppercase mb-3">
+        What We Offer
+      </p>
 
-      {/* ── Hero ── */}
-      <section className="bg-[#1a2a5e] py-20 px-6 text-center">
-        <p className="text-blue-300 text-sm font-semibold tracking-widest uppercase mb-3">What We Offer</p>
-        <h1 className="text-3xl md:text-5xl font-bold text-white mb-5 leading-tight max-w-2xl mx-auto">
-          Everything You Need to Study Smarter
-        </h1>
-        <p className="text-blue-200 text-sm md:text-base max-w-xl mx-auto leading-relaxed mb-8">
-          StudyFlow gives secondary school students the tools, resources, and community to make learning faster, easier, and more enjoyable.
-        </p>
-        <NavLink
-          to="/auth"
-          className="inline-block px-7 py-3.5 rounded-lg bg-white text-[#1a2a5e] font-bold text-sm tracking-wide transition hover:bg-blue-50 active:scale-[0.97] no-underline"
-        >
-          Get Started 
-        </NavLink>
-      </section>
+      <h1 className="text-3xl md:text-5xl font-semibold text-white mb-5 leading-tight">
+        Everything You Need to Study Smarter
+      </h1>
+
+      <p className="text-blue-200 text-sm md:text-base leading-relaxed mb-8 max-w-lg mx-auto md:mx-0">
+        StudyFlow gives secondary school students the tools, resources, and community 
+        to make learning faster, easier, and more enjoyable.
+      </p>
+
+      <NavLink
+        to="/auth"
+        className="inline-block px-7 py-3.5 rounded-lg bg-white text-[#1a2a5e] font-bold text-sm tracking-wide transition hover:bg-blue-50 hover:shadow-lg active:scale-[0.97] no-underline"
+      >
+        Get Started
+      </NavLink>
+    </div>
+
+    {/* ── Right: Image ── */}
+    <div className="w-full flex justify-center md:justify-end">
+      <img
+        src={featureImage}
+        alt="Students learning"
+        className="w-full max-w-md rounded-xl shadow-xl hover:scale-105 transition duration-500"
+      />
+    </div>
+
+  </div>
+</section>
 
       {/* ── Features Grid ── */}
-      <section className="max-w-5xl mx-auto px-6 py-20">
+      <section className="max-w-6xl mx-auto px-5 py-15">
         <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#1a2a5e] mb-3">Packed With Powerful Features</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold text-[#1a2a5e] mb-3">Packed With Powerful Features</h2>
           <p className="text-gray-500 text-sm max-w-lg mx-auto leading-relaxed">
             Built specifically for  secondary school students — every feature solves a real problem you face daily.
           </p>
@@ -114,10 +135,10 @@ const Features = () => {
       </section>
 
       {/* ── How It Works ── */}
-      <section className="bg-[#f5f7fc] py-20 px-6">
-        <div className="max-w-4xl mx-auto">
+      <section className="bg-[#f5f7fc] py-15 px-6">
+        <div className="max-w-6xl mx-auto px-5">
           <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#1a2a5e] mb-3">How It Works</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold text-[#1a2a5e] mb-3">How It Works</h2>
             <p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed">
               Getting started takes less than two minutes. Here's how StudyFlow works.
             </p>
@@ -142,7 +163,7 @@ const Features = () => {
       </section>
 
       {/* ── CTA Banner ── */}
-      <section className="max-w-4xl mx-auto px-6 py-20 text-center">
+      <section className="max-w-6xl mx-auto px-5 py-15 text-center">
         <div className="bg-[#1a2a5e] rounded-3xl px-8 py-14">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-snug">
             Ready to Transform How You Study?

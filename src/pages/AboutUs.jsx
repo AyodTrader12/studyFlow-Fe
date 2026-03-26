@@ -81,7 +81,7 @@ const About = () => {
  
 
       {/* ── Why The Name StudyFlow ── */}
-      <section className="max-w-5xl mx-auto px-6 pb-24 ">
+      <section className="max-w-6xl mx-auto px-5 pb-24 ">
         <div className="flex flex-col md:flex-row items-center gap-12">
 
           {/* Left — stacked screenshots mockup */}

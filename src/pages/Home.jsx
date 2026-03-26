@@ -125,7 +125,7 @@ const testimonials = [
   return (
     <div>
       <section className="bg-gray-50 py-4 sm:py-5 lg:py-5">
-      <div className="max-w-6xl mx-auto px-5 lg:px-12">
+      <div className="max-w-6xl mx-auto px-5 ">
         
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
           
@@ -180,7 +180,7 @@ const testimonials = [
       </div>
     </section>
         <section className="bg-white py-10">
-      <div className="max-w-6xl mx-auto px-5 lg:px-12">
+      <div className="max-w-6xl mx-auto px-5">
         
         {/* Header */}
         <div className="text-center mb-20">
@@ -250,13 +250,81 @@ const testimonials = [
         </div>
       </div>
     </section>
+<<<<<<< Updated upstream
         <section className="max-w-6xl mx-auto py-15 px-5 lg:px-12">
       <Testimonials/>
     
+=======
+        <section className="max-w-6xl mx-auto py-15 px-5">
+      
+      {/* Header */}
+      <div className="text-center mb-12">
+        <h2 className="text-2xl md:text-3xl font-semibold text-[#1a2a5e] mb-3">
+          What Students Are Saying
+        </h2>
+        <p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed">
+          Thousands of students across Nigeria trust StudyFlow to help them prepare, study, and succeed.
+        </p>
+      </div>
+
+      {/* Slider */}
+      <Swiper
+        modules={[Autoplay]}
+        spaceBetween={20}
+        slidesPerView={1}
+        loop={true}
+        speed={1000}
+        autoplay={{
+          delay: 1500,
+          disableOnInteraction: false,
+        }}
+        breakpoints={{
+          768: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
+        }}
+      >
+        {testimonials.map((item, index) => (
+          <SwiperSlide key={index}>
+            <div className="h-full flex flex-col gap-4 p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition">
+              
+              {/* Stars */}
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                ))}
+              </div>
+
+              {/* Text */}
+              <p className="text-sm text-gray-600 leading-relaxed italic">
+                "{item.text}"
+              </p>
+
+              {/* User */}
+              <div className="flex items-center gap-3 mt-auto pt-3 border-t border-gray-100">
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold ${item.color}`}>
+                  {item.initials}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#1a2a5e]">
+                    {item.name}
+                  </p>
+                  <p className="text-[10px] text-gray-400">
+                    {item.level} · {item.school}
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+>>>>>>> Stashed changes
 
     </section>
         <section className="bg-gray-50 py-15">
-      <div className="max-w-6xl mx-auto px-5 lg:px-12">
+      <div className="max-w-6xl mx-auto px-5">
         
         {/* Header */}
         <div className="text-center mb-12">
