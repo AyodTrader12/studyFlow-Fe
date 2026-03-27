@@ -225,7 +225,7 @@ const Home = () => {
         </div>
       </div>
     </section>
-        <section className="max-w-6xl mx-auto py-15 px-5 lg:px-12">
+        <section className="max-w-6xl mx-auto py-15 px-5">
       <Testimonials/>
       </section>
   

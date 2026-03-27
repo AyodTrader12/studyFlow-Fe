@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import logo from "../assets/footerlogo.png"
+import logo from "../assets/footerLogo.png"
 const quickLinks = [
   { label: "Home", to: "/" },
   { label: "About", to: "/about" },
@@ -16,13 +16,13 @@ const legalLinks = [
 export default function Footer() {
   return (
     <footer className="bg-[#1a2a5e] text-white ">
-      <div className="max-w-6xl  mx-auto px-2 justify-center py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-16">
+      <div className="max-w-6xl  mx-auto px-5 justify-center py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-16">
 
         {/* ── Brand col ── */}
         <div className="flex flex-col items-center gap-4 text-center justify-start max-w-[300px]">
           {/* Logo */}
           <NavLink to="/" className="flex items-center gap-2 no-underline ">
-         <img src={logo} alt="StudyFlow Logo" className="max-w-[300px]" />
+         <img src={logo} alt="StudyFlow Logo" className="w-35 h-10" />
           </NavLink>
           <p className="text-sm text-blue-200 leading-relaxed max-w-[250px]">
             Your smart companion for finding study resources in seconds.
