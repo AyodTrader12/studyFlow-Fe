@@ -89,32 +89,7 @@ const Home = () => {
   },
 ];
 
-const testimonials = [
-  {
-    name: "Chidera Okafor",
-    school: "Government Secondary School, Lagos",
-    level: "SS3 Student",
-    text: "StudyFlow helped me find past WAEC questions for all my subjects in one place. My grades improved so much in just two months!",
-    initials: "CO",
-    color: "bg-blue-100 text-blue-700",
-  },
-  {
-    name: "Fatima Abdullahi",
-    school: "Federal Government College, Abuja",
-    level: "JSS2 Student",
-    text: "I used to spend hours looking for study notes online. Now I just open StudyFlow and everything is right there, organised perfectly.",
-    initials: "FA",
-    color: "bg-green-100 text-green-700",
-  },
-  {
-    name: "Emeka Nwosu",
-    school: "Lagos State Model College",
-    level: "SS1 Student",
-    text: "The community feature is amazing. I asked a question and got a clear answer within minutes. Highly recommend!",
-    initials: "EN",
-    color: "bg-orange-100 text-orange-700",
-  },
-];
+
 
   const [openIndex, setOpenIndex] = useState(null);
 

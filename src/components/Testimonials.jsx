@@ -35,7 +35,7 @@ export const testimonials = [
 ];
 
 // ── Stars component ──────────────────────────────────────────────────────────
-function Stars({ value = 5 }) {
+function Stars({ value = 5.0 }) {
   return (
     <div className="flex gap-0.5">
       {[...Array(5)].map((_, i) => (
@@ -64,7 +64,7 @@ function TestimonialCard({ item, animating }) {
         opacity: animating ? 0.15 : 1,
       }}
     >
-      <Stars value={item.rating ?? 5} />
+      <Stars value={item.rating ?? 5.0} />
       <p className="text-sm text-gray-600 leading-relaxed italic flex-1">"{item.text}"</p>
       <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
         <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${item.color}`}>
