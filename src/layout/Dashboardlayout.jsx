@@ -1,16 +1,51 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import LeftSideBar from '../components/LeftSideBar'
-import RightsideBar from '../components/RightsideBar'
+// DashboardLayout.jsx
+// Composes: DashboardTopbar + DashboardLeftSidebar + <Outlet> + DashboardRightSidebar
 
-const Dashboardlayout = () => {
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import TopBar from "../components/TopBar";
+import LeftSideBar from "../components/LeftSideBar"
+import RightSideBar from "../components/RightSideBar"
+
+export default function DashboardLayout({ user }) {
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
-    <div>
-      <LeftSideBar/>
-      <Outlet/>
-      <RightsideBar/>
-    </div>
-  )
-}
+    <div className="min-h-screen bg-[#f0f3fa] flex flex-col">
 
-export default Dashboardlayout
+      {/* ── Top bar ── */}
+      <TopBar
+        user={user}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onMenuToggle={() => setMobileOpen((v) => !v)}
+        mobileOpen={mobileOpen}
+      />
+
+      <div className="flex flex-1 overflow-hidden">
+
+        {/* ── Left Sidebar ── */}
+        <LeftSideBar
+          user={user}
+          collapsed={collapsed}
+          onCollapseToggle={() => setCollapsed((v) => !v)}
+          mobileOpen={mobileOpen}
+          onMobileClose={() => setMobileOpen(false)}
+        />
+
+        {/* ── Main Content ── */}
+        <main className={`flex-1 min-w-0 overflow-auto p-5 lg:p-7 transition-all duration-300 ${collapsed ? "md:ml-[68px]" : "md:ml-[220px]"}`}>
+          <Outlet context={{ searchQuery, user }} />
+        </main>
+
+        {/* ── Right Sidebar (desktop xl+) ── */}
+        <aside className="hidden xl:flex flex-col w-[280px] flex-shrink-0 p-5 gap-5 overflow-y-auto">
+          <RightSideBar user={user} />
+        </aside>
+
+      </div>
+    </div>
+  );
+}

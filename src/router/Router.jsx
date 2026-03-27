@@ -13,6 +13,10 @@ import Home from "../pages/Home"
 import AboutUs from "../pages/AboutUs";
 import Features from "../pages/Features";
 import Contact from "../pages/Contact";
+import Subjects from "../pages/dashboard/Subjects";
+import Bookmark from "../pages/dashboard/Bookmark";
+import Settings from "../pages/dashboard/Settings";
+import PastQuestions from "../pages/dashboard/PastQuestions";
 
 export const router = createBrowserRouter([
     { 
@@ -40,7 +44,11 @@ export const router = createBrowserRouter([
         path:"/dashboard",
         element:<Dashboardlayout/>,
         children:[
-            {index:true,element:<Dashboard/>}
+            {index:true,element:<Dashboard/>},
+            {path:"/dashboard/subjects",element:<Subjects/>},
+            {path:"/dashboard/bookmarks",element:<Bookmark/>},
+            {path:"/dashboard/settings",element:<Settings/>},
+            {path:"/dashboard/past-questions",element:<PastQuestions/>}
         ]
     }
 ])
