@@ -7,7 +7,7 @@ const Mainlayout = () => {
   return (
     <div>
       <Header/>
-        <main className="pt-16 px-5">
+        <main className="pt-16">
         <Outlet />
       </main>
       <Footer/>

@@ -70,7 +70,7 @@ const Login = () => {
       {/* Logo */}
    
            <div className="flex flex-col items-center mb-10 w-full h-10 pt-2">
-                <img src={logo} alt="Logo" className="w-60 h-15 " />
+                <img src={logo} alt="Logo" className="w-50 h-12 " />
               
               </div>
          
