@@ -13,7 +13,7 @@ const TopBar =({ user, searchQuery, onSearchChange, onMenuToggle, mobileOpen }) 
         className="md:hidden w-9 h-9 flex flex-col justify-center items-center gap-1.5 rounded-lg hover:bg-gray-100 transition"
         onClick={onMenuToggle}
         aria-label="Toggle menu"
-      >
+      >\
         <span className={`block h-0.5 w-5 bg-[#1a2a5e] rounded transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-2" : ""}`} />
         <span className={`block h-0.5 w-5 bg-[#1a2a5e] rounded transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`} />
         <span className={`block h-0.5 w-5 bg-[#1a2a5e] rounded transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
@@ -21,7 +21,7 @@ const TopBar =({ user, searchQuery, onSearchChange, onMenuToggle, mobileOpen }) 
 
       {/* Logo */}
         <div className="relative">
-                    <img src={logo} alt="StudyFlow Logo" className="w-35 h-10 "/> 
+                    <img src={logo} alt="StudyFlow Logo" className="w-30 h-10 "/> 
                   </div>
       {/* Search bar */}
       <div className="flex-1 max-w-xl mx-auto relative">
