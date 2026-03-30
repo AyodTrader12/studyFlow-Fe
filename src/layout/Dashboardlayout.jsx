@@ -36,15 +36,14 @@ export default function DashboardLayout({ user }) {
         />
 
         {/* ── Main Content ── */}
-        <main className={`flex-1 min-w-0 overflow-auto p-5 lg:p-7 transition-all duration-300 ${collapsed ? "md:ml-[68px]" : "md:ml-[220px]"}`}>
+        <main className={`flex-1 min-w-0 overflow-auto p-5 lg:p-7 transition-all duration-300 ${collapsed ? "md:ml-[68px]" : "md:ml-[220px]"} xl:mr-[280px]`}>
           <Outlet context={{ searchQuery, user }} />
         </main>
 
         {/* ── Right Sidebar (desktop xl+) ── */}
-        <aside className="hidden xl:flex flex-col w-[280px] flex-shrink-0 p-5 gap-5 overflow-y-auto">
+        <aside className="hidden xl:fixed xl:flex flex-col w-[280px] top-16 right-0 h-[calc(100vh-4rem)] p-5 gap-5 overflow-y-auto bg-[#f0f3fa]">
           <RightSideBar user={user} />
         </aside>
-
       </div>
     </div>
   );
