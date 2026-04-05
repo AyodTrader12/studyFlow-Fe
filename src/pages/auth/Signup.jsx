@@ -2,6 +2,7 @@ import { useState } from "react"
 import { signUp,signInWithGoogle } from "../../Firebase"
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/studylogo.png"
+import { syncUser } from "../../api/UserApi";
 const Signup = () => {
     const [form, setForm] = useState({ name: "", email: "",schoolName:"", password: "", confirmPassword: "" });
   const [errors, setErrors] = useState({});
@@ -36,6 +37,7 @@ const Signup = () => {
     setLoading(true);
     try {
       const user = await signUp(form.name, form.email,form.schoolName, form.password);
+      await syncUser(); // create user in MongoDB and send welcome email
       navigate("/auth/verify", { state: { name: user.displayName, email: user.email } });
     } catch (error) {
       const msg =
@@ -54,6 +56,7 @@ const Signup = () => {
     setGoogleLoading(true);
     try {
       const user = await signInWithGoogle();
+      await syncUser(); // create user in MongoDB and send welcome email
       // Google accounts are pre-verified — go straight to dashboard (or onboarding)
       navigate("/dashboard", { state: { name: user.displayName, email: user.email } });
     } catch (error) {

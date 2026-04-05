@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { auth, resendVerificationEmail, isEmailVerified } from "../../Firebase"
-
+import { confirmEmailVerified } from "../../api/UserApi"
 const Verify = () => {
   const navigate = useNavigate()
   const [resending, setResending] = useState(false);
@@ -38,6 +38,8 @@ const Verify = () => {
     try {
       const verified = await isEmailVerified();
       if (verified) {
+        await confirmEmailVerified();
+
         navigate("/dashboard");
       } else {
         setNotVerifiedMsg("Your email isn't verified yet. Please check your inbox and click the link first.");

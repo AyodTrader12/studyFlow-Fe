@@ -2,6 +2,7 @@ import { useState } from "react";
 import { login,signInWithGoogle } from "../../Firebase"
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/studylogo.png"
+import { syncUser } from "../../api/UserApi";
 const Login = () => {
    const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
@@ -31,6 +32,7 @@ const Login = () => {
     setLoading(true);
     try {
       const user = await login(form.email, form.password);
+      await syncUser()
       if (!user.emailVerified) {
         // Email not verified — send them to the verify page
         navigate("/auth/verify", { state: { name: user.displayName, email: user.email } });
@@ -54,6 +56,7 @@ const Login = () => {
     setGoogleLoading(true);
     try {
       const user = await signInWithGoogle();
+      await syncUser()
       // Google accounts are always verified — go straight to dashboard
       navigate("/dashboard", { name: user.displayName, email: user.email });
     } catch (error) {
