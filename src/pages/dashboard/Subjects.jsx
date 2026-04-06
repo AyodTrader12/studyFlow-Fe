@@ -1,418 +1,257 @@
-// ResourcesPage.jsx
-// Main resources page — subject filters, topic drill-down, type filter, search, grid & viewer modal
-// Drop this into your existing dashboard layout (it renders in the middle content slot)
+// DashboardSubjects.jsx
+// Students browse all available subjects, click one to see its classes (levels),
+// then click a class to go straight to the filtered resources feed.
 
-import React from "react";
+import { useState, useMemo } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useResources } from "../../hook/UseResources";
-import ResourceCard from "./PastQuestions";
-import ResourceViewer from "./ResourceView";
 
-const TYPE_FILTERS = [
-  { id: null,      label: "All",      icon: "◈" },
-  { id: "video",   label: "Videos",   icon: "▶" },
-  { id: "article", label: "Articles", icon: "📝" },
-  { id: "pdf",     label: "PDFs",     icon: "📄" },
+const SUBJECT_META = {
+  "Mathematics":         { emoji: "📐", color: "bg-blue-50",    accent: "bg-blue-500",   text: "text-blue-700",   border: "border-blue-200"   },
+  "English Language":    { emoji: "📖", color: "bg-green-50",   accent: "bg-green-500",  text: "text-green-700",  border: "border-green-200"  },
+  "Biology":             { emoji: "🔬", color: "bg-purple-50",  accent: "bg-purple-500", text: "text-purple-700", border: "border-purple-200" },
+  "Chemistry":           { emoji: "⚗️",  color: "bg-orange-50",  accent: "bg-orange-500", text: "text-orange-700", border: "border-orange-200" },
+  "Physics":             { emoji: "⚡",  color: "bg-yellow-50",  accent: "bg-yellow-500", text: "text-yellow-700", border: "border-yellow-200" },
+  "Economics":           { emoji: "📊", color: "bg-teal-50",    accent: "bg-teal-500",   text: "text-teal-700",   border: "border-teal-200"   },
+  "Government":          { emoji: "🏛️",  color: "bg-red-50",     accent: "bg-red-500",    text: "text-red-700",    border: "border-red-200"    },
+  "Literature":          { emoji: "📜", color: "bg-pink-50",    accent: "bg-pink-500",   text: "text-pink-700",   border: "border-pink-200"   },
+  "Geography":           { emoji: "🌍", color: "bg-cyan-50",    accent: "bg-cyan-500",   text: "text-cyan-700",   border: "border-cyan-200"   },
+  "Agriculture":         { emoji: "🌱", color: "bg-lime-50",    accent: "bg-lime-500",   text: "text-lime-700",   border: "border-lime-200"   },
+  "Further Mathematics": { emoji: "🧮", color: "bg-indigo-50",  accent: "bg-indigo-500", text: "text-indigo-700", border: "border-indigo-200" },
+  "Civic Education":     { emoji: "🤝", color: "bg-amber-50",   accent: "bg-amber-500",  text: "text-amber-700",  border: "border-amber-200"  },
+  "Commerce":            { emoji: "💼", color: "bg-violet-50",  accent: "bg-violet-500", text: "text-violet-700", border: "border-violet-200" },
+};
+
+const LEVEL_GROUPS = [
+  { group: "Junior Secondary", levels: ["JSS1", "JSS2", "JSS3"] },
+  { group: "Senior Secondary", levels: ["SS1",  "SS2",  "SS3"]  },
 ];
 
-export default function ResourcesPage() {
-  const {
-    subjects,
-    filteredResources,
-    activeTopics,
-    activeSubject,
-    activeTopic,
-    activeType,
-    searchQuery,
-    selectedResource,
-    setActiveSubject,
-    setActiveTopic,
-    setActiveType,
-    setSearchQuery,
-    setSelectedResource,
-    clearFilters,
-  } = useResources();
+const ALL_LEVELS = ["JSS1", "JSS2", "JSS3", "SS1", "SS2", "SS3"];
 
-  const activeSubjectData = subjects.find((s) => s.id === activeSubject);
-  const hasActiveFilters = activeSubject || activeTopic || activeType || searchQuery;
+export default function Subjects() {
+  const navigate = useNavigate();
+  const { searchQuery } = useOutletContext();
+  const { allResources } = useResources();
+  const resources = allResources;
+  const loading = false;
+
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [levelFilter, setLevelFilter]         = useState("All");
+
+  // Build a map: subject → { level → count }
+  const subjectMap = useMemo(() => {
+    const map = {};
+    resources.forEach((r) => {
+      const subj  = r.subject;
+      const level = r.level === "All Levels" || !r.level ? "All" : r.level;
+      if (!subj) return;
+      if (!map[subj]) map[subj] = { total: 0, byLevel: {} };
+      map[subj].total += 1;
+      map[subj].byLevel[level] = (map[subj].byLevel[level] || 0) + 1;
+    });
+    return map;
+  }, [resources]);
+
+  // All subjects that have at least 1 resource (or all from meta if loading)
+  const availableSubjects = useMemo(() => {
+    const fromResources = Object.keys(subjectMap);
+    // Also show subjects with 0 resources so the UI isn't empty during loading
+    const allSubjects = Object.keys(SUBJECT_META);
+    const merged = [...new Set([...fromResources, ...allSubjects])];
+    return merged.filter((s) =>
+      !searchQuery || s.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [subjectMap, searchQuery]);
+
+  // When a subject is selected, get the level breakdown
+  const selectedMeta    = selectedSubject ? SUBJECT_META[selectedSubject] || SUBJECT_META["Mathematics"] : null;
+  const selectedCounts  = selectedSubject ? (subjectMap[selectedSubject] || { total: 0, byLevel: {} }) : null;
+
+  const handleLevelClick = (subject, level) => {
+    // Navigate to resources page with query params so it pre-filters
+    navigate(`/dashboard/resources?subject=${encodeURIComponent(subject)}&level=${encodeURIComponent(level)}`);
+  };
 
   return (
-    <div className="rp-root">
-      {/* ── Page Header ── */}
-      <header className="rp-header">
-        <div className="rp-header-left">
-          <h1 className="rp-title">Resources</h1>
-          <p className="rp-subtitle">
-            {filteredResources.length} resource{filteredResources.length !== 1 ? "s" : ""} available
-            {hasActiveFilters ? " — filtered" : ""}
-          </p>
-        </div>
+    <div className="flex flex-col gap-7">
 
-        {/* Search Bar */}
-        <div className="rp-search-wrap">
-          <span className="rp-search-icon">🔍</span>
-          <input
-            className="rp-search"
-            type="text"
-            placeholder="Search by subject, topic, or keyword…"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          {searchQuery && (
-            <button className="rp-search-clear" onClick={() => setSearchQuery("")}>✕</button>
-          )}
-        </div>
-      </header>
-
-      {/* ── Subject Filter Pills ── */}
-      <section className="rp-subjects" aria-label="Subject filters">
-        <button
-          className={`rp-subject-pill ${!activeSubject ? "rp-subject-pill--active" : ""}`}
-          onClick={() => setActiveSubject(null)}
-        >
-          🔮 All Subjects
-        </button>
-        {subjects.map((subject) => (
-          <button
-            key={subject.id}
-            className={`rp-subject-pill ${activeSubject === subject.id ? "rp-subject-pill--active" : ""}`}
-            style={
-              activeSubject === subject.id
-                ? { background: subject.color, color: "#fff", borderColor: subject.color }
-                : {}
-            }
-            onClick={() => setActiveSubject(subject.id)}
-          >
-            {subject.icon} {subject.name}
-          </button>
-        ))}
-      </section>
-
-      {/* ── Topic Sub-Filter (shown when a subject is active) ── */}
-      {activeTopics.length > 0 && (
-        <section className="rp-topics" aria-label="Topic filters">
-          <span className="rp-topics-label">Topic:</span>
-          <button
-            className={`rp-topic-chip ${!activeTopic ? "rp-topic-chip--active" : ""}`}
-            onClick={() => setActiveTopic(null)}
-          >
-            All
-          </button>
-          {activeTopics.map((topic) => (
-            <button
-              key={topic.id}
-              className={`rp-topic-chip ${activeTopic === topic.id ? "rp-topic-chip--active" : ""}`}
-              style={
-                activeTopic === topic.id && activeSubjectData
-                  ? { background: activeSubjectData.color, color: "#fff", borderColor: activeSubjectData.color }
-                  : {}
-              }
-              onClick={() => setActiveTopic(topic.id)}
-            >
-              {topic.name}
-            </button>
-          ))}
-        </section>
-      )}
-
-      {/* ── Type Filter + Clear ── */}
-      <div className="rp-toolbar">
-        <div className="rp-type-filters" role="group" aria-label="Resource type filters">
-          {TYPE_FILTERS.map((t) => (
-            <button
-              key={String(t.id)}
-              className={`rp-type-btn ${activeType === t.id ? "rp-type-btn--active" : ""}`}
-              onClick={() => setActiveType(t.id)}
-            >
-              {t.icon} {t.label}
-            </button>
-          ))}
-        </div>
-
-        {hasActiveFilters && (
-          <button className="rp-clear-btn" onClick={clearFilters}>
-            ✕ Clear filters
-          </button>
-        )}
+      {/* Header */}
+      <div>
+        <h1 className="text-xl md:text-2xl font-bold text-[#1a2a5e]">Subjects</h1>
+        <p className="text-gray-500 text-sm mt-1">
+          Browse all available subjects and select a class to view resources.
+        </p>
       </div>
 
-      {/* ── Resource Grid ── */}
-      {filteredResources.length > 0 ? (
-        <div className="rp-grid">
-          {filteredResources.map((resource, i) => (
-            <ResourceCard
-              key={resource.id}
-              resource={resource}
-              onClick={setSelectedResource}
-              index={i}
-            />
-          ))}
+      {/* Stats strip */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: "Total Subjects",   value: Object.keys(subjectMap).length  || "—" },
+          { label: "Total Resources",  value: resources.length                || "—" },
+          { label: "Junior Secondary", value: resources.filter(r => ["JSS1","JSS2","JSS3"].includes(r.level)).length || "—" },
+          { label: "Senior Secondary", value: resources.filter(r => ["SS1","SS2","SS3"].includes(r.level)).length   || "—" },
+        ].map(({ label, value }) => (
+          <div key={label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+            <p className="text-2xl font-extrabold text-[#1a2a5e]">
+              {loading ? <span className="inline-block w-8 h-6 bg-gray-100 rounded animate-pulse" /> : value}
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">{label}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-6">
+
+        {/* ── Left: Subject Grid ── */}
+        <div className="flex-1 min-w-0">
+          <h2 className="text-sm font-bold text-[#1a2a5e] mb-4">
+            {searchQuery ? `Results for "${searchQuery}"` : "All Subjects"}
+            <span className="ml-2 text-xs font-normal text-gray-400">({availableSubjects.length})</span>
+          </h2>
+
+          {availableSubjects.length === 0 ? (
+            <div className="bg-white rounded-2xl border border-gray-100 p-10 text-center text-gray-400 text-sm">
+              No subjects match your search.
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-3 gap-4">
+              {availableSubjects.map((subject) => {
+                const meta   = SUBJECT_META[subject] || { emoji: "📚", color: "bg-gray-50", accent: "bg-gray-400", text: "text-gray-700", border: "border-gray-200" };
+                const counts = subjectMap[subject]   || { total: 0, byLevel: {} };
+                const isActive = selectedSubject === subject;
+
+                return (
+                  <button
+                    key={subject}
+                    onClick={() => setSelectedSubject(isActive ? null : subject)}
+                    className={`text-left p-4 rounded-2xl border-2 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md
+                      ${isActive ? `${meta.color} ${meta.border} shadow-md -translate-y-0.5` : "bg-white border-gray-100 shadow-sm"}`}
+                  >
+                    {/* Icon */}
+                    <div className={`w-12 h-12 rounded-xl ${meta.color} flex items-center justify-center text-2xl mb-3`}>
+                      {meta.emoji}
+                    </div>
+
+                    {/* Subject name */}
+                    <p className={`text-sm font-bold leading-snug mb-1 ${isActive ? meta.text : "text-[#1a2a5e]"}`}>
+                      {subject}
+                    </p>
+
+                    {/* Resource count */}
+                    <p className="text-[11px] text-gray-400">
+                      {loading
+                        ? <span className="inline-block w-10 h-3 bg-gray-100 rounded animate-pulse" />
+                        : `${counts.total} resource${counts.total !== 1 ? "s" : ""}`
+                      }
+                    </p>
+
+                    {/* Level pills (mini) */}
+                    {!loading && counts.total > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {ALL_LEVELS.filter((l) => counts.byLevel[l] > 0).map((l) => (
+                          <span key={l} className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${meta.color} ${meta.text}`}>
+                            {l}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="rp-empty">
-          <span className="rp-empty-icon">🔭</span>
-          <h3>No resources found</h3>
-          <p>Try adjusting your search or filters.</p>
-          <button className="rp-clear-btn" onClick={clearFilters}>
-            Clear all filters
-          </button>
-        </div>
-      )}
 
-      {/* ── Resource Viewer Modal ── */}
-      {selectedResource && (
-        <ResourceViewer
-          resource={selectedResource}
-          onClose={() => setSelectedResource(null)}
-        />
-      )}
+        {/* ── Right: Level Detail Panel ── */}
+        {selectedSubject && selectedMeta && (
+          <aside className="w-full lg:w-[300px] flex-shrink-0">
+            <div className={`${selectedMeta.color} rounded-2xl border-2 ${selectedMeta.border} p-5 sticky top-4`}>
 
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
+              {/* Subject header */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-white/60 flex items-center justify-center text-2xl">
+                    {selectedMeta.emoji}
+                  </div>
+                  <div>
+                    <p className={`text-base font-bold ${selectedMeta.text}`}>{selectedSubject}</p>
+                    <p className="text-xs text-gray-500">{selectedCounts.total} resources total</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedSubject(null)}
+                  className="w-7 h-7 rounded-full bg-white/60 flex items-center justify-center text-gray-400 hover:text-gray-600 transition"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
 
-        .rp-root {
-          font-family: 'DM Sans', sans-serif;
-          color: #0f1e3d;
-          padding: 1.75rem 2rem;
-          min-height: 100%;
-          background: #f7f9ff;
-        }
+              {/* View all resources button */}
+              <button
+                onClick={() => handleLevelClick(selectedSubject, "All Levels")}
+                className={`w-full mb-4 py-2.5 rounded-xl bg-[#1a2a5e] text-white text-sm font-bold transition hover:bg-[#14234d] active:scale-[0.98]`}
+              >
+                View All {selectedSubject} Resources
+              </button>
 
-        /* Header */
-        .rp-header {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 1.5rem;
-          flex-wrap: wrap;
-          margin-bottom: 1.5rem;
-        }
-        .rp-title {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: 2rem;
-          font-weight: 900;
-          color: #0f1e3d;
-          margin: 0 0 0.2rem;
-          letter-spacing: -0.02em;
-        }
-        .rp-subtitle {
-          font-size: 0.85rem;
-          color: #6b7a99;
-          margin: 0;
-        }
+              {/* Level groups */}
+              {LEVEL_GROUPS.map(({ group, levels }) => {
+                const hasAny = levels.some((l) => (selectedCounts.byLevel[l] || 0) > 0);
+                return (
+                  <div key={group} className="mb-4 last:mb-0">
+                    <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${selectedMeta.text} opacity-70`}>
+                      {group}
+                    </p>
+                    <div className="flex flex-col gap-1.5">
+                      {levels.map((level) => {
+                        const count = selectedCounts.byLevel[level] || 0;
+                        return (
+                          <button
+                            key={level}
+                            onClick={() => count > 0 && handleLevelClick(selectedSubject, level)}
+                            disabled={count === 0}
+                            className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium transition
+                              ${count > 0
+                                ? `bg-white/70 ${selectedMeta.text} hover:bg-white hover:shadow-sm cursor-pointer active:scale-[0.98]`
+                                : "bg-white/30 text-gray-400 cursor-not-allowed"
+                              }`}
+                          >
+                            <span>{level}</span>
+                            <span className={`text-xs font-bold px-2 py-0.5 rounded-full
+                              ${count > 0 ? `${selectedMeta.color} ${selectedMeta.text}` : "bg-gray-100 text-gray-400"}`}>
+                              {count} {count === 1 ? "resource" : "resources"}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
 
-        /* Search */
-        .rp-search-wrap {
-          position: relative;
-          flex: 1;
-          min-width: 260px;
-          max-width: 420px;
-        }
-        .rp-search-icon {
-          position: absolute;
-          left: 14px;
-          top: 50%;
-          transform: translateY(-50%);
-          font-size: 0.9rem;
-          pointer-events: none;
-        }
-        .rp-search {
-          width: 100%;
-          padding: 0.65rem 2.5rem 0.65rem 2.75rem;
-          border: 1.5px solid #d8e0f0;
-          border-radius: 50px;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.88rem;
-          color: #0f1e3d;
-          background: #fff;
-          outline: none;
-          box-sizing: border-box;
-          transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .rp-search::placeholder { color: #a0aac0; }
-        .rp-search:focus {
-          border-color: #1a3a6b;
-          box-shadow: 0 0 0 3px rgba(26,58,107,0.1);
-        }
-        .rp-search-clear {
-          position: absolute;
-          right: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: none;
-          border: none;
-          font-size: 0.8rem;
-          color: #6b7a99;
-          cursor: pointer;
-          padding: 2px 4px;
-        }
-        .rp-search-clear:hover { color: #0f1e3d; }
+              {/* All levels shortcut */}
+              {(selectedCounts.byLevel["All"] || 0) > 0 && (
+                <div className="mt-3 pt-3 border-t border-white/40">
+                  <button
+                    onClick={() => handleLevelClick(selectedSubject, "All")}
+                    className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium bg-white/70 ${selectedMeta.text} hover:bg-white hover:shadow-sm transition active:scale-[0.98]`}
+                  >
+                    <span>All Classes</span>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${selectedMeta.color} ${selectedMeta.text}`}>
+                      {selectedCounts.byLevel["All"]} resources
+                    </span>
+                  </button>
+                </div>
+              )}
 
-        /* Subject Pills */
-        .rp-subjects {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-          margin-bottom: 1rem;
-        }
-        .rp-subject-pill {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.82rem;
-          font-weight: 600;
-          padding: 0.45rem 1rem;
-          border-radius: 50px;
-          border: 1.5px solid #d8e0f0;
-          background: #fff;
-          color: #1a2a4a;
-          cursor: pointer;
-          transition: all 0.18s ease;
-          white-space: nowrap;
-        }
-        .rp-subject-pill:hover {
-          border-color: #1a3a6b;
-          color: #1a3a6b;
-          background: rgba(26,58,107,0.05);
-        }
-        .rp-subject-pill--active {
-          background: #1a3a6b;
-          color: #fff;
-          border-color: #1a3a6b;
-        }
+            </div>
+          </aside>
+        )}
 
-        /* Topic Chips */
-        .rp-topics {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 0.4rem;
-          margin-bottom: 1rem;
-          padding: 0.75rem 1rem;
-          background: #fff;
-          border: 1.5px solid #e8edf8;
-          border-radius: 12px;
-        }
-        .rp-topics-label {
-          font-size: 0.78rem;
-          font-weight: 700;
-          color: #6b7a99;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-          margin-right: 0.25rem;
-        }
-        .rp-topic-chip {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.78rem;
-          font-weight: 500;
-          padding: 0.3rem 0.85rem;
-          border-radius: 50px;
-          border: 1.5px solid #d8e0f0;
-          background: #f7f9ff;
-          color: #1a2a4a;
-          cursor: pointer;
-          transition: all 0.15s ease;
-        }
-        .rp-topic-chip:hover {
-          border-color: #1a3a6b;
-          background: rgba(26,58,107,0.06);
-        }
-        .rp-topic-chip--active {
-          background: #1a3a6b;
-          color: #fff;
-          border-color: #1a3a6b;
-        }
-
-        /* Toolbar */
-        .rp-toolbar {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          gap: 0.75rem;
-          margin-bottom: 1.5rem;
-        }
-        .rp-type-filters {
-          display: flex;
-          gap: 0.4rem;
-          flex-wrap: wrap;
-        }
-        .rp-type-btn {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.8rem;
-          font-weight: 500;
-          padding: 0.35rem 0.9rem;
-          border-radius: 8px;
-          border: 1.5px solid #d8e0f0;
-          background: #fff;
-          color: #4a5a78;
-          cursor: pointer;
-          transition: all 0.15s ease;
-        }
-        .rp-type-btn:hover {
-          border-color: #1a3a6b;
-          color: #1a3a6b;
-        }
-        .rp-type-btn--active {
-          background: rgba(26,58,107,0.08);
-          border-color: #1a3a6b;
-          color: #1a3a6b;
-          font-weight: 700;
-        }
-        .rp-clear-btn {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.8rem;
-          font-weight: 600;
-          padding: 0.35rem 1rem;
-          border-radius: 8px;
-          border: 1.5px solid #e0e5f2;
-          background: #fff;
-          color: #6b7a99;
-          cursor: pointer;
-          transition: all 0.15s;
-        }
-        .rp-clear-btn:hover {
-          background: #fdf2f2;
-          border-color: #e63946;
-          color: #e63946;
-        }
-
-        /* Grid */
-        .rp-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 1.25rem;
-        }
-
-        /* Empty State */
-        .rp-empty {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 0.75rem;
-          padding: 4rem 2rem;
-          text-align: center;
-        }
-        .rp-empty-icon { font-size: 3rem; }
-        .rp-empty h3 {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: 1.3rem;
-          font-weight: 700;
-          color: #0f1e3d;
-          margin: 0;
-        }
-        .rp-empty p {
-          color: #6b7a99;
-          font-size: 0.9rem;
-          margin: 0;
-        }
-
-        /* Responsive */
-        @media (max-width: 640px) {
-          .rp-root { padding: 1rem; }
-          .rp-header { flex-direction: column; }
-          .rp-search-wrap { max-width: 100%; }
-          .rp-grid { grid-template-columns: 1fr; }
-        }
-      `}</style>
+      </div>
     </div>
   );
 }
