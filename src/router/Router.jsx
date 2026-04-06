@@ -19,7 +19,7 @@ import Settings from "../pages/Settings";
 import PastQuestions from "../pages/dashboard/PastQuestions";
 import AdminPanel from "../pages/Admin/AdminLogin";
 import ResourceViewer from "../pages/dashboard/ResourceView";
-
+import DashboardProgress from "../pages/dashboard/Progress";
 export const router = createBrowserRouter([
     { 
         path: "/",
@@ -51,7 +51,8 @@ export const router = createBrowserRouter([
             {path:"/dashboard/bookmarks",element:<Bookmark/>},
             {path:"/dashboard/settings",element:<Settings/>},
             {path:"/dashboard/past-questions",element:<PastQuestions/>},
-            {path:"/dashboard/resource",element:<ResourceViewer/>}
+            {path:"/dashboard/resource",element:<ResourceViewer/>},
+            {path:"/dashboard/progress",element:<DashboardProgress/>}
         ]
     },
     {path:"/admin",element:<AdminPanel/>}
