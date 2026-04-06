@@ -89,8 +89,6 @@ const Home = () => {
   },
 ];
 
-
-
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggleFAQ = (index) => {
@@ -107,7 +105,7 @@ const Home = () => {
           {/* LEFT */}
           <div className="flex-1 text-center lg:text-left">
             
-            <p className="text-blue-600 font-medium text-md tracking-wide mb-2">
+            <p className="text-blue-600 font-medium text-md tracking-wide mt-3">
               SMART STUDY PLATFORM
             </p>
 
