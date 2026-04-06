@@ -15,7 +15,7 @@ import Features from "../pages/Features";
 import Contact from "../pages/Contact";
 import Subjects from "../pages/dashboard/Subjects";
 import Bookmark from "../pages/dashboard/Bookmark";
-import Settings from "../pages/dashboard/Settings";
+import Settings from "../pages/Settings";
 import PastQuestions from "../pages/dashboard/PastQuestions";
 import AdminPanel from "../pages/Admin/AdminLogin";
 import ResourceViewer from "../pages/dashboard/ResourceView";

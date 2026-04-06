@@ -36,8 +36,13 @@ const Signup = () => {
     if (Object.keys(validationErrors).length > 0) { setErrors(validationErrors); return; }
     setLoading(true);
     try {
-      const user = await signUp(form.name, form.email,form.schoolName, form.password);
-      await syncUser(); // create user in MongoDB and send welcome email
+      const user = await signUp(form.name, form.email, form.password);
+      await syncUser({
+        name: form.name,
+        email: form.email,
+        schoolName: form.schoolName,
+        firebaseUid: user.uid
+      }); // create user in MongoDB and send welcome email
       navigate("/auth/verify", { state: { name: user.displayName, email: user.email } });
     } catch (error) {
       const msg =
@@ -56,7 +61,11 @@ const Signup = () => {
     setGoogleLoading(true);
     try {
       const user = await signInWithGoogle();
-      await syncUser(); // create user in MongoDB and send welcome email
+      await syncUser({
+        name: user.displayName,
+        email: user.email,
+        firebaseUid: user.uid
+      }); // create user in MongoDB and send welcome email
       // Google accounts are pre-verified — go straight to dashboard (or onboarding)
       navigate("/dashboard", { state: { name: user.displayName, email: user.email } });
     } catch (error) {

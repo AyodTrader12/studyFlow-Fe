@@ -3,7 +3,7 @@ import { get, post, patch } from "../api/Client.js";
 
 /** Called right after Firebase sign-up or login. Syncs user to MongoDB. */
 export const syncUser = (data) =>
-  post("/api/auth/sync", data);
+  post("/api/auth/sync", data, false);
 
 /**
  * Called after Firebase confirms the email is verified.

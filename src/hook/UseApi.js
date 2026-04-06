@@ -20,7 +20,7 @@ import { useState, useEffect, useCallback } from "react";
 // } from "../servi";
 import { getResources,getResource } from "../api/ResourceApi";
 import { getBookmarks, addBookmark, removeBookmark } from "../api/BookMarkApi";
-import { getProgress, getProgressStats, markResourceViewed } from "../api/progressApi";
+import { getProgress, getProgressStats, markResourceViewed } from "../api/Progress";
 import { getReminders, createReminder, deleteReminder } from "../api/RemiderApi";
 import { getSummary, generateSummary } from "../api/SummaryApi";
 

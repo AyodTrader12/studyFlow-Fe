@@ -4,8 +4,8 @@
 
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../services/firebase";
-import { syncUser, getMe } from "../services/api";
+import { auth } from "../Firebase";
+import { syncUser, getMe } from "../api/UserApi.js";
 
 const AuthContext = createContext(null);
 
@@ -31,7 +31,11 @@ export function AuthProvider({ children }) {
         try {
           // Sync Firebase user to MongoDB on every login.
           // Backend creates the user if first time and sends welcome email.
-          const { user } = await syncUser();
+          const { user } = await syncUser({
+            name: fbUser.displayName,
+            email: fbUser.email,
+            firebaseUid: fbUser.uid
+          });
           setUserProfile(user);
         } catch {
           // Fallback — try just fetching the existing profile
