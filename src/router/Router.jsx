@@ -17,9 +17,10 @@ import Subjects from "../pages/dashboard/Subjects";
 import Bookmark from "../pages/dashboard/Bookmark";
 import Settings from "../pages/Settings";
 import PastQuestions from "../pages/dashboard/PastQuestions";
-import AdminPanel from "../pages/Admin/AdminLogin";
+import AdminPanel from "../pages/Admin/AdminPanel";
 import ResourceViewer from "../pages/dashboard/ResourceView";
 import DashboardProgress from "../pages/dashboard/Progress";
+import ResourcesPage from "../pages/dashboard/ResourcePage";
 export const router = createBrowserRouter([
     { 
         path: "/",
@@ -52,7 +53,9 @@ export const router = createBrowserRouter([
             {path:"/dashboard/settings",element:<Settings/>},
             {path:"/dashboard/past-questions",element:<PastQuestions/>},
             {path:"/dashboard/resource",element:<ResourceViewer/>},
-            {path:"/dashboard/progress",element:<DashboardProgress/>}
+            {path:"/dashboard/progress",element:<DashboardProgress/>},
+            {path:"/dashboard/resource-view/:id",element:<ResourceViewer/>},
+            {path:"/dashboard/resource-page",element:<ResourcesPage/>}
         ]
     },
     {path:"/admin",element:<AdminPanel/>}

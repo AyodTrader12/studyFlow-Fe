@@ -1,308 +1,338 @@
-// ResourceViewer.jsx
-// Handles embedded playback of YouTube videos, PDFs, and article notes
-// All content stays WITHIN the app — no redirects to external platforms
+// src/pages/ResourceViewer.jsx
+// Opens when a student clicks any resource card.
+// - Marks resource as viewed automatically (updates streak on backend)
+// - YouTube: embedded iframe — no redirect
+// - PDF: Google Docs Viewer iframe — no redirect
+// - Notes: rendered markdown — fully in-app
+// - Article: sandboxed iframe with fallback link
+// - SummaryCard shown below every resource
 
-import React, { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate, useOutletContext } from "react-router-dom";
+import { useResource, useProgress, useBookmarks } from "../../hook/UseApi";
+import SummaryCard from "../../components/SummaryCard";
 
-const typeConfig = {
-  video: { label: "Video", icon: "▶", badge: "#e63946" },
-  pdf: { label: "PDF", icon: "📄", badge: "#2a6496" },
-  article: { label: "Article", icon: "📝", badge: "#2d7a4f" },
+const TYPE_META = {
+  youtube: { label: "Video",   badgeClass: "bg-red-50 text-red-600" },
+  pdf:     { label: "PDF",     badgeClass: "bg-blue-50 text-blue-600" },
+  notes:   { label: "Notes",   badgeClass: "bg-purple-50 text-purple-600" },
+  article: { label: "Article", badgeClass: "bg-green-50 text-green-600" },
 };
 
-const difficultyConfig = {
-  Beginner: { color: "#2d7a4f", bg: "rgba(45,122,79,0.12)" },
-  Intermediate: { color: "#d97706", bg: "rgba(217,119,6,0.12)" },
-  Advanced: { color: "#dc2626", bg: "rgba(220,38,38,0.12)" },
-};
+function toYouTubeEmbed(url) {
+  try {
+    const u = new URL(url);
+    let id  = u.searchParams.get("v");
+    if (!id && u.hostname === "youtu.be") id = u.pathname.slice(1);
+    if (!id && u.pathname.includes("/embed/")) return url;
+    return id ? `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1` : url;
+  } catch { return url; }
+}
 
-export default function ResourceViewer({ resource, onClose }) {
-  const [articleLoaded, setArticleLoaded] = useState(false);
-  const [iframeError, setIframeError] = useState(false);
+function toPDFViewer(url) {
+  if (url.includes("docs.google.com/viewer")) return url;
+  return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+}
 
-  if (!resource) return null;
+// ── Notes markdown renderer ───────────────────────────────────────────────────
+function renderInline(text) {
+  const parts = [];
+  let rem = text, k = 0;
+  while (rem.length > 0) {
+    const bold   = rem.match(/^(.*?)\*\*(.+?)\*\*(.*)/s);
+    if (bold)   { if (bold[1])   parts.push(<span key={k++}>{bold[1]}</span>);   parts.push(<strong key={k++} className="font-bold text-[#1a2a5e]">{bold[2]}</strong>);  rem = bold[3];   continue; }
+    const code   = rem.match(/^(.*?)`(.+?)`(.*)/s);
+    if (code)   { if (code[1])   parts.push(<span key={k++}>{code[1]}</span>);   parts.push(<code key={k++} className="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded text-xs font-mono">{code[2]}</code>); rem = code[3];   continue; }
+    const italic = rem.match(/^(.*?)\*(.+?)\*(.*)/s);
+    if (italic) { if (italic[1]) parts.push(<span key={k++}>{italic[1]}</span>); parts.push(<em key={k++} className="italic text-gray-600">{italic[2]}</em>);            rem = italic[3]; continue; }
+    parts.push(<span key={k++}>{rem}</span>); break;
+  }
+  return parts.length === 1 && typeof parts[0]?.props?.children === "string" ? parts[0].props.children : parts;
+}
 
-  const typeCfg = typeConfig[resource.type] || typeConfig.article;
-  const diffCfg = difficultyConfig[resource.difficulty] || difficultyConfig.Beginner;
+function NotesRenderer({ content }) {
+  if (!content) return null;
+  const lines = content.split("\n");
+  const els   = [];
+  let   i     = 0;
 
-  const renderContent = () => {
-    switch (resource.type) {
-      case "video":
-        return (
-          <div className="resource-embed-wrapper">
-            <iframe
-              className="resource-embed resource-embed--video"
-              src={`https://www.youtube-nocookie.com/embed/${resource.embedId}?autoplay=1&rel=0&modestbranding=1`}
-              title={resource.title}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        );
+  while (i < lines.length) {
+    const line = lines[i];
+    if (line.startsWith("# "))   { els.push(<h1 key={i} className="text-2xl font-extrabold text-[#1a2a5e] mt-8 mb-4 pb-2 border-b-2 border-blue-100">{line.slice(2)}</h1>); i++; continue; }
+    if (line.startsWith("## "))  { els.push(<h2 key={i} className="text-xl font-bold text-[#1a2a5e] mt-6 mb-3">{line.slice(3)}</h2>); i++; continue; }
+    if (line.startsWith("### ")) { els.push(<h3 key={i} className="text-base font-bold text-[#1a2a5e] mt-5 mb-2">{line.slice(4)}</h3>); i++; continue; }
+    if (line.startsWith("---"))  { els.push(<hr key={i} className="my-6 border-gray-200" />); i++; continue; }
 
-      case "pdf":
-        return (
-          <div className="resource-embed-wrapper">
-            <iframe
-              className="resource-embed resource-embed--pdf"
-              src={`${resource.url}#toolbar=1&navpanes=1`}
-              title={resource.title}
-              frameBorder="0"
-              onLoad={() => setArticleLoaded(true)}
-              onError={() => setIframeError(true)}
-            />
-            {iframeError && (
-              <div className="resource-fallback">
-                <span>⚠️</span>
-                <p>This PDF cannot be embedded directly.</p>
-                <a
-                  href={resource.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="resource-fallback-link"
-                >
-                  Open PDF in new tab →
-                </a>
-              </div>
-            )}
-          </div>
-        );
-
-      case "article":
-        return (
-          <div className="resource-embed-wrapper">
-            {!iframeError ? (
-              <iframe
-                className="resource-embed resource-embed--article"
-                src={resource.url}
-                title={resource.title}
-                frameBorder="0"
-                sandbox="allow-scripts allow-same-origin allow-popups"
-                onLoad={() => setArticleLoaded(true)}
-                onError={() => setIframeError(true)}
-              />
-            ) : (
-              <div className="resource-fallback">
-                <span>🔗</span>
-                <p>This article is best viewed directly on its source site.</p>
-                <a
-                  href={resource.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="resource-fallback-link"
-                >
-                  Open Article →
-                </a>
-              </div>
-            )}
-          </div>
-        );
-
-      default:
-        return null;
+    if (line.startsWith("```")) {
+      const code = []; i++;
+      while (i < lines.length && !lines[i].startsWith("```")) { code.push(lines[i]); i++; }
+      els.push(<pre key={`c${i}`} className="bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 my-4 overflow-x-auto text-sm font-mono text-gray-700 leading-relaxed"><code>{code.join("\n")}</code></pre>);
+      i++; continue;
     }
-  };
+
+    if (line.startsWith("|")) {
+      const rows = []; while (i < lines.length && lines[i].startsWith("|")) { rows.push(lines[i]); i++; }
+      const dataRows = rows.filter((r) => !r.match(/^\|[-| ]+\|$/));
+      els.push(
+        <div key={`t${i}`} className="overflow-x-auto my-5 rounded-xl border border-gray-200">
+          <table className="w-full text-sm">
+            <thead><tr className="bg-[#1a2a5e] text-white">{dataRows[0]?.split("|").filter((c) => c.trim()).map((cell, ci) => <th key={ci} className="px-4 py-2.5 text-left font-semibold text-xs">{cell.trim()}</th>)}</tr></thead>
+            <tbody>{dataRows.slice(1).map((row, ri) => <tr key={ri} className={ri % 2 === 0 ? "bg-white" : "bg-gray-50"}>{row.split("|").filter((c) => c.trim()).map((cell, ci) => <td key={ci} className="px-4 py-2.5 text-gray-700 border-t border-gray-100">{renderInline(cell.trim())}</td>)}</tr>)}</tbody>
+          </table>
+        </div>
+      );
+      continue;
+    }
+
+    if (line.startsWith("- ") || line.startsWith("* ")) {
+      const items = []; while (i < lines.length && (lines[i].startsWith("- ") || lines[i].startsWith("* "))) { items.push(lines[i].slice(2)); i++; }
+      els.push(<ul key={`u${i}`} className="my-3 flex flex-col gap-1.5 pl-5">{items.map((item, idx) => <li key={idx} className="text-gray-700 text-sm leading-relaxed list-disc">{renderInline(item)}</li>)}</ul>);
+      continue;
+    }
+
+    if (/^\d+\.\s/.test(line)) {
+      const items = []; while (i < lines.length && /^\d+\.\s/.test(lines[i])) { items.push(lines[i].replace(/^\d+\.\s/, "")); i++; }
+      els.push(<ol key={`o${i}`} className="my-3 flex flex-col gap-1.5 pl-6">{items.map((item, idx) => <li key={idx} className="text-gray-700 text-sm leading-relaxed list-decimal">{renderInline(item)}</li>)}</ol>);
+      continue;
+    }
+
+    if (line.trim() === "") { i++; continue; }
+    els.push(<p key={i} className="text-gray-700 text-sm leading-relaxed my-2">{renderInline(line)}</p>);
+    i++;
+  }
+  return <div>{els}</div>;
+}
+
+// ── Main viewer ───────────────────────────────────────────────────────────────
+export default function ResourceViewer() {
+  const { id }   = useParams();
+  const navigate = useNavigate();
+  useOutletContext(); // keeps context alive
+
+  const { resource, loading, error } = useResource(id);
+  const { markViewed }               = useProgress();
+  const { isBookmarked, toggle }     = useBookmarks();
+
+  const [iframeLoading, setIframeLoading] = useState(true);
+  const markedRef = useRef(false);
+  const startTime = useRef(Date.now());
+
+  // Mark as viewed once — records time spent when component unmounts
+  useEffect(() => {
+    if (resource && !markedRef.current) {
+      markedRef.current = true;
+      startTime.current = Date.now();
+    }
+    return () => {
+      if (markedRef.current) {
+        const timeSpent = Math.round((Date.now() - startTime.current) / 1000);
+        markViewed(resource?._id, timeSpent);
+      }
+    };
+  }, [resource]); // eslint-disable-line
+
+  if (loading) return (
+    <div className="flex items-center justify-center h-64">
+      <svg className="animate-spin h-8 w-8 text-[#1a2a5e]" viewBox="0 0 24 24" fill="none">
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+      </svg>
+    </div>
+  );
+
+  if (error || !resource) return (
+    <div className="flex flex-col items-center gap-4 py-20 text-center">
+      <p className="text-red-500 text-sm">{error || "Resource not found."}</p>
+      <button onClick={() => navigate(-1)} className="text-sm text-[#1a2a5e] font-semibold hover:underline">
+        ← Go back
+      </button>
+    </div>
+  );
+
+  const meta = TYPE_META[resource.type] || TYPE_META.article;
+  const embedUrl =
+    resource.type === "youtube" ? toYouTubeEmbed(resource.url) :
+    resource.type === "pdf"     ? toPDFViewer(resource.url)    :
+    resource.url;
 
   return (
-    <div className="resource-viewer-overlay" onClick={onClose}>
-      <div
-        className="resource-viewer"
-        onClick={(e) => e.stopPropagation()}
+    <div className="flex flex-col gap-5 max-w-4xl">
+
+      {/* Back */}
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-sm text-gray-500 hover:text-[#1a2a5e] transition w-fit"
       >
-        {/* Header */}
-        <div className="resource-viewer-header">
-          <div className="resource-viewer-meta">
-            <span
-              className="resource-type-badge"
-              style={{ background: typeCfg.badge }}
-            >
-              {typeCfg.icon} {typeCfg.label}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Back to Resources
+      </button>
+
+      {/* Meta card */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col sm:flex-row sm:items-start gap-4">
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${meta.badgeClass}`}>
+              {meta.label}
             </span>
-            <span
-              className="resource-difficulty-badge"
-              style={{ color: diffCfg.color, background: diffCfg.bg }}
-            >
-              {resource.difficulty}
+            <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-medium">
+              {resource.subject}
             </span>
-            {resource.subjectName && (
-              <span className="resource-subject-tag">
-                {resource.subjectIcon} {resource.subjectName} · {resource.topicName}
+            {resource.level && (
+              <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">
+                {resource.level}
+              </span>
+            )}
+            {resource.topic && (
+              <span className="text-[10px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full font-medium">
+                {resource.topic}
               </span>
             )}
           </div>
-          <button className="resource-viewer-close" onClick={onClose}>
-            ✕
-          </button>
+          <h1 className="text-lg font-bold text-[#1a2a5e] leading-snug mb-1">{resource.title}</h1>
+          {resource.description && (
+            <p className="text-sm text-gray-500 mb-2 leading-relaxed">{resource.description}</p>
+          )}
+          <div className="flex items-center gap-3 text-xs text-gray-400">
+            {resource.duration && <span>⏱ {resource.duration}</span>}
+            {resource.views > 0 && <span>👁 {resource.views} views</span>}
+          </div>
         </div>
 
-        <h2 className="resource-viewer-title">{resource.title}</h2>
-        <p className="resource-viewer-desc">{resource.description}</p>
+        {/* Bookmark button */}
+        <button
+          onClick={() => toggle(resource._id)}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition flex-shrink-0 ${
+            isBookmarked(resource._id)
+              ? "bg-[#1a2a5e] border-[#1a2a5e] text-white"
+              : "bg-white border-gray-200 text-gray-600 hover:border-[#1a2a5e] hover:text-[#1a2a5e]"
+          }`}
+        >
+          <svg
+            width="14" height="14" viewBox="0 0 24 24"
+            fill={isBookmarked(resource._id) ? "white" : "none"}
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+          >
+            <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+          </svg>
+          {isBookmarked(resource._id) ? "Bookmarked" : "Bookmark"}
+        </button>
+      </div>
 
-        {/* Embed Area */}
-        {renderContent()}
+      {/* Content area */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
 
-        {/* Footer tags */}
-        {resource.tags && (
-          <div className="resource-viewer-tags">
-            {resource.tags.map((tag) => (
-              <span key={tag} className="resource-tag">
-                #{tag}
-              </span>
-            ))}
+        {/* YouTube */}
+        {resource.type === "youtube" && (
+          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+            {iframeLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+                <svg className="animate-spin h-8 w-8 text-[#1a2a5e]" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+              </div>
+            )}
+            <iframe
+              src={embedUrl}
+              title={resource.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              onLoad={() => setIframeLoading(false)}
+              className="absolute inset-0 w-full h-full border-0"
+            />
+          </div>
+        )}
+
+        {/* PDF */}
+        {resource.type === "pdf" && (
+          <div className="relative w-full" style={{ height: "80vh", minHeight: "500px" }}>
+            {iframeLoading && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 gap-3">
+                <svg className="animate-spin h-8 w-8 text-[#1a2a5e]" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+                <p className="text-xs text-gray-400">Loading PDF...</p>
+              </div>
+            )}
+            <iframe
+              src={embedUrl}
+              title={resource.title}
+              onLoad={() => setIframeLoading(false)}
+              className="w-full h-full border-0"
+            />
+          </div>
+        )}
+
+        {/* Notes — rendered in-app */}
+        {resource.type === "notes" && (
+          <div className="px-7 py-7 max-w-3xl">
+            {resource.content
+              ? <NotesRenderer content={resource.content} />
+              : <p className="text-gray-400 text-sm italic">No content available.</p>
+            }
+            <div className="mt-10 pt-5 border-t border-gray-100 flex items-center justify-between flex-wrap gap-3">
+              <p className="text-xs text-gray-400">
+                {resource.duration} · {resource.subject} · {resource.level}
+              </p>
+              <button
+                onClick={() => toggle(resource._id)}
+                className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition ${
+                  isBookmarked(resource._id)
+                    ? "bg-[#1a2a5e] text-white"
+                    : "border border-gray-200 text-gray-500 hover:border-[#1a2a5e] hover:text-[#1a2a5e]"
+                }`}
+              >
+                {isBookmarked(resource._id) ? "✓ Saved" : "Save for later"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Article */}
+        {resource.type === "article" && (
+          <div className="relative w-full" style={{ height: "80vh", minHeight: "500px" }}>
+            {iframeLoading && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 gap-3">
+                <svg className="animate-spin h-8 w-8 text-[#1a2a5e]" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+                <p className="text-xs text-gray-400">Loading article...</p>
+              </div>
+            )}
+            <iframe
+              src={resource.url}
+              title={resource.title}
+              sandbox="allow-scripts allow-same-origin allow-popups"
+              onLoad={() => setIframeLoading(false)}
+              className="w-full h-full border-0"
+            />
+            <div className="border-t border-gray-100 px-5 py-3 flex items-center justify-between bg-gray-50">
+              <p className="text-xs text-gray-400">If the article does not load, open it directly:</p>
+              <a
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-semibold text-[#3b6fd4] hover:underline flex items-center gap-1"
+              >
+                Open in new tab
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+              </a>
+            </div>
           </div>
         )}
       </div>
 
-      <style>{`
-        .resource-viewer-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(5, 15, 40, 0.82);
-          backdrop-filter: blur(6px);
-          z-index: 1000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 1rem;
-          animation: fadeIn 0.2s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+      {/* Gemini AI Summary — shown below every resource */}
+      <SummaryCard resourceId={resource._id} subject={resource.subject} />
 
-        .resource-viewer {
-          background: #ffffff;
-          border-radius: 16px;
-          width: 100%;
-          max-width: 900px;
-          max-height: 92vh;
-          overflow-y: auto;
-          padding: 1.75rem;
-          box-shadow: 0 32px 80px rgba(5,15,40,0.5);
-          animation: slideUp 0.25s cubic-bezier(0.34,1.56,0.64,1);
-        }
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(30px) scale(0.97) }
-          to   { opacity: 1; transform: translateY(0) scale(1) }
-        }
-
-        .resource-viewer-header {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          margin-bottom: 0.75rem;
-          gap: 1rem;
-        }
-        .resource-viewer-meta {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-          align-items: center;
-        }
-        .resource-type-badge {
-          font-size: 0.72rem;
-          font-weight: 700;
-          color: #fff;
-          padding: 3px 10px;
-          border-radius: 20px;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-        }
-        .resource-difficulty-badge {
-          font-size: 0.72rem;
-          font-weight: 600;
-          padding: 3px 10px;
-          border-radius: 20px;
-          letter-spacing: 0.03em;
-        }
-        .resource-subject-tag {
-          font-size: 0.76rem;
-          color: #6b7a99;
-          font-weight: 500;
-        }
-        .resource-viewer-close {
-          background: #f0f3fa;
-          border: none;
-          width: 34px;
-          height: 34px;
-          border-radius: 50%;
-          font-size: 0.85rem;
-          cursor: pointer;
-          color: #1a2a4a;
-          flex-shrink: 0;
-          transition: background 0.15s, transform 0.15s;
-        }
-        .resource-viewer-close:hover {
-          background: #e0e5f2;
-          transform: scale(1.1);
-        }
-        .resource-viewer-title {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: 1.4rem;
-          font-weight: 700;
-          color: #0f1e3d;
-          margin: 0 0 0.5rem;
-          line-height: 1.35;
-        }
-        .resource-viewer-desc {
-          font-size: 0.9rem;
-          color: #4a5a78;
-          margin: 0 0 1.25rem;
-          line-height: 1.6;
-        }
-        .resource-embed-wrapper {
-          width: 100%;
-          border-radius: 12px;
-          overflow: hidden;
-          background: #0f1e3d;
-          margin-bottom: 1.25rem;
-          position: relative;
-        }
-        .resource-embed {
-          width: 100%;
-          display: block;
-          border: none;
-        }
-        .resource-embed--video {
-          aspect-ratio: 16/9;
-        }
-        .resource-embed--pdf,
-        .resource-embed--article {
-          height: 520px;
-        }
-        .resource-fallback {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 0.75rem;
-          padding: 3rem 2rem;
-          background: #f5f7ff;
-          text-align: center;
-        }
-        .resource-fallback span { font-size: 2.5rem; }
-        .resource-fallback p { color: #4a5a78; font-size: 0.95rem; margin: 0; }
-        .resource-fallback-link {
-          color: #1a3a6b;
-          font-weight: 600;
-          font-size: 0.95rem;
-          text-decoration: none;
-          border-bottom: 2px solid #1a3a6b;
-          padding-bottom: 2px;
-        }
-        .resource-fallback-link:hover { opacity: 0.75; }
-        .resource-viewer-tags {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.4rem;
-        }
-        .resource-tag {
-          font-size: 0.74rem;
-          color: #4a5a78;
-          background: #f0f3fa;
-          padding: 3px 10px;
-          border-radius: 20px;
-        }
-      `}</style>
     </div>
   );
 }

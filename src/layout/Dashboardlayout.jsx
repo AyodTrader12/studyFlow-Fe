@@ -1,32 +1,41 @@
-// DashboardLayout.jsx
-// Composes: DashboardTopbar + DashboardLeftSidebar + <Outlet> + DashboardRightSidebar
+// src/layouts/DashboardLayout.jsx
+// Owns shared state: sidebar collapse, mobile menu, search query.
+// Search is debounced here before being passed to pages via Outlet context.
 
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import TopBar from "../components/TopBar";
+import { useAuth } from "../context/AuthContext";
+import DashBoardTopbar from "../components/TopBar"
 import LeftSideBar from "../components/LeftSideBar"
-import RightSideBar from "../components/RightSideBar"
+import RightSideBar from "../components/RightSideBar";
+import { useDebounce } from "../hook/UseSearch";
 
-export default function DashboardLayout({ user }) {
-  const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+export default function DashboardLayout() {
+  const { firebaseUser, userProfile } = useAuth();
+  const [collapsed,    setCollapsed]   = useState(false);
+  const [mobileOpen,   setMobileOpen]  = useState(false);
+  const [rawSearch,    setRawSearch]   = useState("");
+
+  // Debounce the search so the API is only called after typing stops
+  const searchQuery = useDebounce(rawSearch, 400);
+
+  // Pass both the raw value (for the input to stay responsive)
+  // and the debounced value (for API calls) to child pages
+  const user = userProfile || firebaseUser;
 
   return (
     <div className="min-h-screen bg-[#f0f3fa] flex flex-col">
 
-      {/* ── Top bar ── */}
-      <TopBar
+      <DashBoardTopbar
         user={user}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        searchQuery={rawSearch}
+        onSearchChange={setRawSearch}
         onMenuToggle={() => setMobileOpen((v) => !v)}
         mobileOpen={mobileOpen}
       />
 
       <div className="flex flex-1 overflow-hidden">
 
-        {/* ── Left Sidebar ── */}
         <LeftSideBar
           user={user}
           collapsed={collapsed}
@@ -35,15 +44,16 @@ export default function DashboardLayout({ user }) {
           onMobileClose={() => setMobileOpen(false)}
         />
 
-        {/* ── Main Content ── */}
+        {/* Main content — passes debounced searchQuery to every page */}
         <main className={`flex-1 min-w-0 overflow-auto p-5 lg:p-7 transition-all duration-300 ${collapsed ? "md:ml-[68px]" : "md:ml-[220px]"} xl:mr-[280px]`}>
-          <Outlet context={{ searchQuery, user }} />
+          <Outlet context={{ searchQuery, rawSearch, user }} />
         </main>
 
-        {/* ── Right Sidebar (desktop xl+) ── */}
-        <aside className="hidden xl:fixed xl:flex flex-col w-[280px] top-16 right-0 h-[calc(100vh-4rem)] p-5 gap-5 overflow-y-auto bg-[#f0f3fa]">
+        {/* Right sidebar — desktop xl+ only */}
+        <aside className="hidden xl:flex flex-col w-[280px] flex-shrink-0 p-5 gap-5 overflow-y-auto xl:fixed xl:top-16 xl:right-0 xl:h-[calc(100vh-4rem)]">
           <RightSideBar user={user} />
         </aside>
+
       </div>
     </div>
   );
