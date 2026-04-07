@@ -199,28 +199,6 @@ export default function RightSideBar({ user }) {
         </div>
       )}
 
-      {/* ── Study Streak ── */}
-      <div className="bg-[#1a2a5e] rounded-2xl p-4">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-lg">🔥</span>
-          <p className="text-white text-sm font-bold">Study Streak</p>
-        </div>
-        <p className="text-blue-200 text-xs mb-3 leading-snug">Keep studying daily to grow your streak!</p>
-        <div className="flex gap-1">
-          {["M","T","W","T","F","S","S"].map((d, i) => (
-            <div key={i} className="flex flex-col items-center gap-1 flex-1">
-              <div
-                className={`w-full aspect-square rounded-md flex items-center justify-center text-[9px] font-bold
-                  ${i < 4 ? "bg-orange-400 text-white" : "bg-white/10 text-blue-300"}`}
-              >
-                {i < 4 ? "✓" : d}
-              </div>
-            </div>
-          ))}
-        </div>
-        <p className="text-orange-300 text-xs font-bold mt-2">4 day streak 🎉</p>
-      </div>
-
     </div>
   );
 }
