@@ -21,6 +21,8 @@ import AdminPanel from "../pages/Admin/AdminPanel";
 import ResourceViewer from "../pages/dashboard/ResourceView";
 import DashboardProgress from "../pages/dashboard/Progress";
 import ResourcesPage from "../pages/dashboard/ResourcePage";
+import PastQuestionsBrowser from "../pages/dashboard/PastQuestionBrowser";
+import PastQuestionViewer from "../pages/dashboard/PastQuestionViewer";
 export const router = createBrowserRouter([
     { 
         path: "/",
@@ -55,7 +57,10 @@ export const router = createBrowserRouter([
             {path:"/dashboard/resource",element:<ResourceViewer/>},
             {path:"/dashboard/progress",element:<DashboardProgress/>},
             {path:"/dashboard/resource-view/:id",element:<ResourceViewer/>},
-            {path:"/dashboard/resource-page",element:<ResourcesPage/>}
+            {path:"/dashboard/resource-page",element:<ResourcesPage/>},
+            {path:"/dashboard/past-question/browser",element:<PastQuestionsBrowser/>},
+            {path:"/dashboard/past-question-viewer/:id",element:<PastQuestionViewer/>}
+
         ]
     },
     {path:"/admin",element:<AdminPanel/>}
