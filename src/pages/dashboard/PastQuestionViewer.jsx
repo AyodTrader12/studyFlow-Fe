@@ -69,9 +69,9 @@ function AIPanel({ question }) {
 
       // Build a context-aware prompt
       const systemPrompt = `You are a helpful tutor for Nigerian secondary school students.
-The student is studying ${question.subject} using the ${question.examBody} ${question.year} past question paper.
-The exam is at ${question.level} level.
-Be concise, clear, and appropriate for the Nigerian secondary school curriculum.`;
+    The student is studying ${question.subject} using the ${question.examBody} ${question.year} past question paper.
+    The exam is at ${question.level} level.
+    Be concise, clear, and appropriate for the Nigerian secondary school curriculum.`;
 
       let userPrompt = "";
       if (mode === "explain") {

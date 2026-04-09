@@ -159,7 +159,7 @@ export default function PastQuestions() {
   const handleSelect = (examBody, subject) => {
     const params = new URLSearchParams({ examBody });
     if (subject) params.set("subject", subject);
-    navigate(`/dashboard/past-questions/browse?${params.toString()}`);
+    navigate(`/dashboard/past-questions-browser?${params.toString()}`);
   };
 
   // Build a map: { examBody: { subjects, totalCount } }

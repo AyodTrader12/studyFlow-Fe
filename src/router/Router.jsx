@@ -58,7 +58,7 @@ export const router = createBrowserRouter([
             {path:"/dashboard/progress",element:<DashboardProgress/>},
             {path:"/dashboard/resource-view/:id",element:<ResourceViewer/>},
             {path:"/dashboard/resource-page",element:<ResourcesPage/>},
-            {path:"/dashboard/past-question/browser",element:<PastQuestionsBrowser/>},
+            {path:"/dashboard/past-question-browser",element:<PastQuestionsBrowser/>},
             {path:"/dashboard/past-question-viewer/:id",element:<PastQuestionViewer/>}
 
         ]
