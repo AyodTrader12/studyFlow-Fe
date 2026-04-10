@@ -41,8 +41,10 @@ const Signup = () => {
         name: form.name,
         email: form.email,
         schoolName: form.schoolName,
-        firebaseUid: user.uid
-      }); // create user in MongoDB and send welcome email
+          // firebaseUid: user.uid
+        }); // create user in MongoDB and send welcome email
+        clg
+
       navigate("/auth/verify", { state: { name: user.displayName, email: user.email } });
     } catch (error) {
       const msg =

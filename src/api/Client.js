@@ -4,7 +4,7 @@
 
 import { auth } from "../Firebase.js"; "; // your existing firebase.js"
 
-export const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:2244";
+export const BASE_URL = import.meta.env.VITE_RENDER_URL ;
 
 async function getToken() {
   const user = auth.currentUser;
