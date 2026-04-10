@@ -47,7 +47,7 @@ export default function SettingsPage({ user }) {
             <p className="text-xs text-gray-400 uppercase tracking-wide">
               Settings
             </p>
-            <h1 className="text-lg font-semibold text-gray-900">
+            <h1 className="text-xl md:text-2xl font-bold text-[#1a2a5e]">
               Account Center
             </h1>
           </div>
