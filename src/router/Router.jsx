@@ -23,6 +23,10 @@ import DashboardProgress from "../pages/dashboard/Progress";
 import ResourcesPage from "../pages/dashboard/ResourcePage";
 import PastQuestionsBrowser from "../pages/dashboard/PastQuestionBrowser";
 import PastQuestionViewer from "../pages/dashboard/PastQuestionViewer";
+import Forbidden403 from "../pages/error/Forbidden403";
+import NotFound404 from "../pages/error/NotFound404";
+import ServerError500 from "../pages/error/ServerError500";
+import ErrorLayout from "../layout/ErrorLayout";
 export const router = createBrowserRouter([
     { 
         path: "/",
@@ -59,10 +63,19 @@ export const router = createBrowserRouter([
             {path:"/dashboard/resource-view/:id",element:<ResourceViewer/>},
             {path:"/dashboard/resource-page",element:<ResourcesPage/>},
             {path:"/dashboard/past-question-browser",element:<PastQuestionsBrowser/>},
-            {path:"/dashboard/past-question-viewer/:id",element:<PastQuestionViewer/>}
+            {path:"/dashboard/past-question-viewer/:id",element:<PastQuestionViewer/>},
+           
+        
 
         ]
     },
-    {path:"/admin",element:<AdminPanel/>}
+ 
 
+        
+            {path:"/500",element:<ServerError500/>},
+            {path:"/403",element:<Forbidden403/>},
+   
+     {path:"*",element:<NotFound404/>},
 ])
+
+    // {path:"/admin",element:<AdminPanel/>},
