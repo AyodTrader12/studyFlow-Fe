@@ -187,7 +187,7 @@ export default function DashboardHome() {
           </p>
         </div>
         <button
-          onClick={() => navigate("/dashboard/resources")}
+          onClick={() => navigate("/dashboard/resource-page")}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1a2a5e] text-white text-sm font-bold hover:bg-[#14234d] transition active:scale-95 flex-shrink-0"
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -277,7 +277,7 @@ export default function DashboardHome() {
                   Start viewing resources to track your progress by subject.
                 </p>
                 <button
-                  onClick={() => navigate("/dashboard/resources")}
+                  onClick={() => navigate("/dashboard/resource-page")}
                   className="mt-3 text-xs text-[#3b6fd4] font-semibold hover:underline"
                 >
                   Browse resources →
@@ -295,7 +295,7 @@ export default function DashboardHome() {
                   return (
                     <div
                       key={stat._id}
-                      onClick={() => navigate(`/dashboard/resources?subject=${encodeURIComponent(stat._id)}`)}
+                      onClick={() => navigate(`/dashboard/resource-page?subject=${encodeURIComponent(stat._id)}`)}
                       className="flex items-center gap-3 cursor-pointer group"
                     >
                       <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0 ${colorClass}`}>
@@ -331,7 +331,7 @@ export default function DashboardHome() {
                 {searchQuery ? `Results for "${searchQuery}"` : "Featured Resources"}
               </h2>
               <button
-                onClick={() => navigate("/dashboard/resources")}
+                onClick={() => navigate("/dashboard/resource-page")}
                 className="text-xs text-[#3b6fd4] font-semibold hover:underline"
               >
                 View all →
@@ -354,7 +354,7 @@ export default function DashboardHome() {
                   <ResourceMiniCard
                     key={resource._id}
                     resource={resource}
-                    onClick={() => navigate(`/dashboard/resources/${resource._id}`)}
+                    onClick={() => navigate(`/dashboard/resource-view/${resource._id}`)}
                   />
                 ))}
               </div>
@@ -449,7 +449,7 @@ export default function DashboardHome() {
                   <ResourceMiniCard
                     key={resource._id}
                     resource={resource}
-                    onClick={() => navigate(`/dashboard/resources/${resource._id}`)}
+                    onClick={() => navigate(`/dashboard/resource-view/${resource._id}`)}
                   />
                 ))}
                 {bookmarks.length > 4 && (
