@@ -26,7 +26,6 @@ import PastQuestionViewer from "../pages/dashboard/PastQuestionViewer";
 import Forbidden403 from "../pages/error/Forbidden403";
 import NotFound404 from "../pages/error/NotFound404";
 import ServerError500 from "../pages/error/ServerError500";
-import ErrorLayout from "../layout/ErrorLayout";
 export const router = createBrowserRouter([
     { 
         path: "/",

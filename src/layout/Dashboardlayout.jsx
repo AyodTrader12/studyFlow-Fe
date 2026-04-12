@@ -7,7 +7,7 @@ import { Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import DashBoardTopbar from "../components/TopBar"
 import LeftSideBar from "../components/LeftSideBar"
-import RightSideBar from "../components/RightSideBar";
+import RightSideBar from "../components/RightsideBar";
 import { useDebounce } from "../hook/UseSearch";
 
 export default function DashboardLayout() {
