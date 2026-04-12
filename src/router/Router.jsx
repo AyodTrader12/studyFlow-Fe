@@ -17,7 +17,7 @@ import Subjects from "../pages/dashboard/Subjects";
 import Bookmark from "../pages/dashboard/Bookmark";
 import Settings from "../pages/Settings";
 import PastQuestions from "../pages/dashboard/PastQuestions";
-import AdminPanel from "../pages/Admin/AdminPanel";
+import AdminPanel from "../pages/Admin/AdminResources";
 import ResourceViewer from "../pages/dashboard/ResourceView";
 import DashboardProgress from "../pages/dashboard/Progress";
 import ResourcesPage from "../pages/dashboard/ResourcePage";
@@ -26,7 +26,14 @@ import PastQuestionViewer from "../pages/dashboard/PastQuestionViewer";
 import Forbidden403 from "../pages/error/Forbidden403";
 import NotFound404 from "../pages/error/NotFound404";
 import ServerError500 from "../pages/error/ServerError500";
-import ErrorLayout from "../layout/ErrorLayout";
+import AdminRoute from "./AdminRoute";
+import AdminLayout from "../layout/AdminLayout";
+import AdminOverview from "../pages/Admin/AdminOverView";
+import AdminUsers from "../pages/Admin/AdminUsers";
+import AdminResources from "../pages/Admin/AdminResources";
+import AdminPastQuestions from "../pages/Admin/AdminPastQuestions";
+import AdminAnalytics from "../pages/Admin/AdminAnalytics";
+
 export const router = createBrowserRouter([
     { 
         path: "/",
@@ -69,12 +76,24 @@ export const router = createBrowserRouter([
 
         ]
     },
- 
-
-        
+        //    erorr routes
             {path:"/500",element:<ServerError500/>},
             {path:"/403",element:<Forbidden403/>},
-   
+      
+  {
+    path:"/admin/",
+    element:<AdminRoute>
+        <AdminLayout/>
+    </AdminRoute>,
+    children:[
+        {index:true,element:<AdminOverview/>},
+        {path:"/admin/users",element:<AdminUsers/>},
+        {path:"/admin/resources",element:<AdminResources/>},
+        {path:"/admin/past-questions",element:<AdminPastQuestions/>},
+        {path:"/admin/analytics",element:<AdminAnalytics/>}
+    ]
+  },
+        
      {path:"*",element:<NotFound404/>},
 ])
 

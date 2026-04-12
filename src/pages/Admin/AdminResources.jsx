@@ -30,7 +30,7 @@ const EMPTY_FORM = {
   thumbnail: "", content: "", description: "",
 };
 
-export default function AdminPanel() {
+export default function AdminResources() {
   const { isAdmin }  = useAuth();
   const navigate     = useNavigate();
   useOutletContext();

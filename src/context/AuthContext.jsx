@@ -1,70 +1,57 @@
 // src/context/AuthContext.jsx
-// Wraps Firebase auth state AND the MongoDB user profile in one context.
-// Use useAuth() anywhere in the app instead of calling Firebase directly.
+// No Firebase. Auth state is determined by calling GET /api/auth/me.
+// If the httpOnly cookie is valid, the backend returns the user profile.
+// If not (401), the user is not logged in.
 
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../Firebase";
-import { syncUser, getMe } from "../api/UserApi.js";
+import { getMe, logout as apiLogout } from "../api/UserApi";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [firebaseUser, setFirebaseUser] = useState(null);
-  const [userProfile,  setUserProfile]  = useState(null);
-  const [loading,      setLoading]      = useState(true);
+  const [user,    setUser]    = useState(null);
+  const [loading, setLoading] = useState(true); // true while checking auth state on load
 
-  const refreshProfile = useCallback(async () => {
+  // Check auth state on every app load by hitting /api/auth/me
+  const checkAuth = useCallback(async () => {
     try {
-      const { user } = await getMe();
-      setUserProfile(user);
+      const { user: u } = await getMe();
+      setUser(u);
     } catch {
-      // User might not be synced yet — that is fine
+      // 401 means not logged in — that's fine
+      setUser(null);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
-      setFirebaseUser(fbUser);
+    checkAuth();
+  }, [checkAuth]);
 
-      if (fbUser) {
-        try {
-          // Sync Firebase user to MongoDB on every login.
-          // Backend creates the user if first time and sends welcome email.
-          const { user } = await syncUser({
-            name: fbUser.displayName,
-            email: fbUser.email,
-            firebaseUid: fbUser.uid
-          });
-          setUserProfile(user);
-        } catch {
-          // Fallback — try just fetching the existing profile
-          await refreshProfile().catch(() => null);
-        }
-      } else {
-        setUserProfile(null);
-      }
-
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [refreshProfile]);
+  const refreshUser = async () => {
+    try {
+      const { user: u } = await getMe();
+      setUser(u);
+    } catch {
+      setUser(null);
+    }
+  };
 
   const logout = async () => {
-    await signOut(auth);
-    setUserProfile(null);
+    try { await apiLogout(); } catch { /* ignore */ }
+    setUser(null);
   };
 
   return (
     <AuthContext.Provider
       value={{
-        firebaseUser,
-        userProfile,
+        user,
         loading,
-        isAdmin: userProfile?.isAdmin ?? false,
+        isAdmin:     user?.isAdmin  ?? false,
+        isVerified:  user?.isVerified ?? false,
         logout,
-        refreshProfile,
+        refreshUser,
       }}
     >
       {children}
