@@ -70,7 +70,7 @@ export function ForgotPassword() {
           </form>
 
           <div className="text-center mt-4">
-            <Link to="auth/login" className="text-xs text-gray-400 hover:text-gray-600 transition">
+            <Link to="/auth/login" className="text-xs text-gray-400 hover:text-gray-600 transition">
               ← Back to login
             </Link>
           </div>

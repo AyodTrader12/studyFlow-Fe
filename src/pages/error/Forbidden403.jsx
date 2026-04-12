@@ -215,7 +215,7 @@ export default function Forbidden403() {
         <div className="flex justify-center gap-4 mt-5">
           {[
             { label: "Home",  path: "/" },
-            { label: "Login", path: "/login" },
+            { label: "Login", path: "/auth/login" },
             { label: "Back",  action: () => navigate(-1) },
           ].map(({ label, path, action }) => (
             <button

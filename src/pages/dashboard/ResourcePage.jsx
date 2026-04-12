@@ -321,7 +321,7 @@ export default function ResourcesPage() {
               <ResourceCard
                 key={resource._id}
                 resource={resource}
-                onNavigate={(id) => navigate(`/dashboard/resources/${id}`)}
+                onNavigate={(id) => navigate(`/dashboard/resource-view/${id}`)}
                 isBookmarked={isBookmarked(resource._id)}
                 onToggleBookmark={toggle}
               />

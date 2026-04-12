@@ -227,7 +227,7 @@ export default function DashboardProgress() {
 
         {streak === 0 && (
           <button
-            onClick={() => navigate("/dashboard/resources")}
+            onClick={() => navigate("/dashboard/resource-page")}
             className="mt-4 w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition"
           >
             Browse resources to start your streak →
@@ -259,7 +259,7 @@ export default function DashboardProgress() {
             <p className="text-sm font-semibold text-[#1a2a5e] mb-1">No progress yet</p>
             <p className="text-xs text-gray-400 mb-4">Start viewing resources and your progress appears here.</p>
             <button
-              onClick={() => navigate("/dashboard/resources")}
+              onClick={() => navigate("/dashboard/resource-page")}
               className="px-5 py-2 rounded-xl bg-[#1a2a5e] text-white text-xs font-bold hover:bg-[#14234d] transition"
             >
               Browse Resources
@@ -278,7 +278,7 @@ export default function DashboardProgress() {
                   key={stat._id}
                   className="cursor-pointer group"
                   onClick={() =>
-                    navigate(`/dashboard/resources?subject=${encodeURIComponent(stat._id)}`)
+                    navigate(`/dashboard/resource-page?subject=${encodeURIComponent(stat._id)}`)
                   }
                 >
                   <div className="flex items-center gap-3 mb-2">
@@ -347,7 +347,7 @@ export default function DashboardProgress() {
                 return (
                   <div
                     key={entry._id || i}
-                    onClick={() => navigate(`/dashboard/resources/${resource._id}`)}
+                    onClick={() => navigate(`/dashboard/resource-view/${resource._id}`)}
                     className="flex items-start gap-3 pl-1 py-2.5 cursor-pointer hover:bg-gray-50 rounded-xl transition group"
                   >
                     {/* Timeline dot */}

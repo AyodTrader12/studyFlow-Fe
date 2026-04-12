@@ -1,13 +1,13 @@
-// src/components/AdminRoute.jsx
-// Protects /admin/* routes.
-// Must be logged in AND isAdmin === true.
-// Non-admins are redirected to /dashboard, not /login.
+// src/components/ProtectedRoute.jsx
+// Guards dashboard routes. Uses AuthContext (no Firebase).
+// Shows a spinner while auth state is loading on first render.
 
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export default function AdminRoute({ children }) {
+export default function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -16,16 +16,15 @@ export default function AdminRoute({ children }) {
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
         </svg>
-        <p className="text-sm text-gray-400">Loading...</p>
+        <p className="text-sm text-gray-400 font-medium">Loading StudyFlow...</p>
       </div>
     );
   }
 
-  // Not logged in → login page
-  if (!user) return <Navigate to="/auth/login" replace />;
-
-  // Logged in but not admin → student dashboard
-  if (!user.isAdmin) return <Navigate to="/dashboard" replace />;
+  if (!user) {
+    // Redirect to login and remember where they were trying to go
+    return <Navigate to="/auth/login" state={{ from: location }} replace />;
+  }
 
   return children;
 }

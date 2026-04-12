@@ -8,7 +8,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useResources } from "../../hook/UseApi";
 import { createResource, deleteResource } from "../../api/ResourceApi";
-import { auth } from "../../Firebase";
+// import { auth } from "../../Firebase";
 const SUBJECTS = [
   "Mathematics", "English Language", "Biology", "Chemistry", "Physics",
   "Economics", "Government", "Literature", "Geography", "Agriculture",

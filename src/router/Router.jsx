@@ -33,6 +33,7 @@ import AdminUsers from "../pages/Admin/AdminUsers";
 import AdminResources from "../pages/Admin/AdminResources";
 import AdminPastQuestions from "../pages/Admin/AdminPastQuestions";
 import AdminAnalytics from "../pages/Admin/AdminAnalytics";
+import ProtectedRoute from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
     { 
@@ -58,7 +59,10 @@ export const router = createBrowserRouter([
     },
     {
         path:"/dashboard",
-        element:<Dashboardlayout/>,
+
+        element:<ProtectedRoute>
+            <Dashboardlayout/>,
+        </ProtectedRoute>,
         children:[
             {index:true,element:<Dashboard/>},
             {path:"/dashboard/subjects",element:<Subjects/>},

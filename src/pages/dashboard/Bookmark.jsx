@@ -155,7 +155,7 @@ export default function DashboardBookmarks() {
         </div>
         {bookmarks.length > 0 && (
           <button
-            onClick={() => navigate("/dashboard/resources")}
+            onClick={() => navigate("/dashboard/resource-page")}
             className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -293,7 +293,7 @@ export default function DashboardBookmarks() {
             </p>
           </div>
           <button
-            onClick={() => navigate("/dashboard/resources")}
+            onClick={() => navigate("/dashboard/resource-page")}
             className="px-6 py-3 rounded-xl bg-[#1a2a5e] text-white text-sm font-bold hover:bg-[#14234d] transition active:scale-95"
           >
             Browse Resources
@@ -323,7 +323,7 @@ export default function DashboardBookmarks() {
               resource={resource}
               gradientIdx={i}
               onRemove={toggle}
-              onClick={() => navigate(`/dashboard/resources/${resource._id}`)}
+              onClick={() => navigate(`/dashboard/resource-view/${resource._id}`)}
             />
           ))}
         </div>
@@ -343,7 +343,7 @@ export default function DashboardBookmarks() {
                     {items.length} resource{items.length !== 1 ? "s" : ""}
                   </span>
                   <button
-                    onClick={() => navigate(`/dashboard/resources?subject=${encodeURIComponent(subject)}`)}
+                    onClick={() => navigate(`/dashboard/resource-page?subject=${encodeURIComponent(subject)}`)}
                     className="text-[11px] text-[#3b6fd4] hover:underline font-medium ml-auto"
                   >
                     More {subject} →
@@ -356,7 +356,7 @@ export default function DashboardBookmarks() {
                       resource={resource}
                       gradientIdx={i}
                       onRemove={toggle}
-                      onClick={() => navigate(`/dashboard/resources/${resource._id}`)}
+                      onClick={() => navigate(`/dashboard/resource-view/${resource._id}`)}
                     />
                   ))}
                 </div>

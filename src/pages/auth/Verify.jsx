@@ -104,7 +104,7 @@ export default function Verify() {
     try {
       await verifyOtp({ email, otp });
       setSuccess("Email verified! Redirecting to login...");
-      setTimeout(() => navigate("auth/login", { state: { verified: true } }), 1500);
+      setTimeout(() => navigate("/auth/login", { state: { verified: true } }), 1500);
     } catch (err) {
       setError(err.message || "Verification failed. Please try again.");
       // Clear digits on error so student can re-enter
@@ -186,7 +186,7 @@ export default function Verify() {
 
           {/* 6 OTP boxes */}
           <div
-            className="flex justify-center gap-3 mb-6"
+            className="flex justify-center gap-2 sm:gap-3 mb-6"
             onPaste={handlePaste}
           >
             {digits.map((digit, idx) => (
@@ -201,7 +201,7 @@ export default function Verify() {
                 onChange={(e) => handleChange(idx, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(idx, e)}
                 onFocus={(e) => e.target.select()}
-                className={`w-12 h-14 text-center text-xl font-extrabold rounded-xl border-2 outline-none transition
+                className={`w-10 h-12 sm:w-12 sm:h-14 text-center text-lg sm:text-xl font-extrabold rounded-xl border-2 outline-none transition
                   ${digit
                     ? "border-[#1a2a5e] bg-[#f0f3fa] text-[#1a2a5e]"
                     : "border-gray-200 bg-white text-gray-700"
