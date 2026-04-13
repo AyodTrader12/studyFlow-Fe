@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { forgotPassword } from "../../api/UserApi";
+import logo from "../../assets/studylogo.png"
 
 export function ForgotPassword() {
   const navigate = useNavigate();
@@ -30,13 +31,15 @@ export function ForgotPassword() {
   return (
     <div className="min-h-screen bg-[#f0f3fa] flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
-        <div className="flex items-center justify-center gap-2 mb-8">
-          <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
-            <path d="M8 12C8 10.3 9.3 9 11 9H24V39H11C9.3 39 8 37.7 8 36V12Z" fill="#1a2a5e"/>
-            <path d="M40 12C40 10.3 38.7 9 37 9H24V39H37C38.7 39 40 37.7 40 36V12Z" fill="#1a2a5e" opacity="0.7"/>
-          </svg>
-          <span className="text-xl font-extrabold text-[#1a2a5e]">StudyFlow</span>
-        </div>
+        {/* Logo */}
+<div className="flex items-center justify-center gap-2 mb-8">
+  <img 
+    src={logo} 
+    alt="StudyFlow Logo" 
+    className="h-9 w-auto"   // Adjust height as needed (h-8, h-10, h-12 etc.)
+  />
+  <span className="text-xl font-extrabold text-[#1a2a5e]">StudyFlow</span>
+</div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 px-8 py-8">
           <h1 className="text-2xl font-extrabold text-[#1a2a5e] mb-2">Forgot your password?</h1>
