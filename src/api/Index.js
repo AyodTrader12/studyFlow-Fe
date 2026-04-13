@@ -13,4 +13,4 @@ export * from "./ProgressApi";
 export * from "./ReminderApi";
 export * from "./SummaryApi.js";
 
-export { BASE_URL } from "./Client.js";
+export { BASE_URL } from "./client";

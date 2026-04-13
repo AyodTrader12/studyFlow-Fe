@@ -1,7 +1,7 @@
 // src/services/api/bookmarkApi.js
 // All endpoints for saving and removing bookmarked resources.
 
-import { get, post, del } from "./Client.js";
+import { get, post, del } from "./client";
 /** Get all resources the current user has bookmarked. */
 export const getBookmarks = () =>
   get("/api/bookmarks");

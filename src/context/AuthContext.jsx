@@ -47,6 +47,8 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
+        userProfile: user,
+        firebaseUser: null,
         loading,
         isAdmin:     user?.isAdmin  ?? false,
         isVerified:  user?.isVerified ?? false,
