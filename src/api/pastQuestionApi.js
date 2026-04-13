@@ -1,5 +1,5 @@
 // src/services/api/pastQuestionApi.js
-import { get, post, del } from "./Client.js";
+import { get, post, del } from "./client";
 
 /** Get all past questions — optionally filtered by examBody, subject, year */
 export const getPastQuestions = (filters = {}) => {
