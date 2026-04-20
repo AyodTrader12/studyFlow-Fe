@@ -11,7 +11,7 @@ import RightSideBar from "../components/RightsideBar";
 import { useDebounce } from "../hook/UseSearch";
 
 export default function DashboardLayout() {
-  const { firebaseUser, userProfile } = useAuth();
+  const { userProfile } = useAuth();
   const [collapsed,    setCollapsed]   = useState(false);
   const [mobileOpen,   setMobileOpen]  = useState(false);
   const [rawSearch,    setRawSearch]   = useState("");
@@ -21,7 +21,7 @@ export default function DashboardLayout() {
 
   // Pass both the raw value (for the input to stay responsive)
   // and the debounced value (for API calls) to child pages
-  const user = userProfile || firebaseUser;
+  const user = userProfile; 
 
   return (
     <div className="min-h-screen bg-[#f0f3fa] flex flex-col">

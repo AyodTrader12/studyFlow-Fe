@@ -64,9 +64,6 @@ function AIPanel({ question }) {
     setResponse("");
 
     try {
-      const { auth } = await import("../../Firebase");
-      const token = await auth.currentUser?.getIdToken();
-
       // Build a context-aware prompt
       const systemPrompt = `You are a helpful tutor for Nigerian secondary school students.
     The student is studying ${question.subject} using the ${question.examBody} ${question.year} past question paper.
@@ -86,9 +83,9 @@ function AIPanel({ question }) {
 
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ai/ask`, {
         method:  "POST",
+        credentials: "include",
         headers: {
           "Content-Type":  "application/json",
-          Authorization:   `Bearer ${token}`,
         },
         body: JSON.stringify({ systemPrompt, userPrompt }),
       });

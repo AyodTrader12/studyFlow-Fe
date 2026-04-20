@@ -2,7 +2,7 @@
 // Props: user, collapsed, onCollapseToggle, mobileOpen, onMobileClose
 
 import { NavLink, useNavigate } from "react-router-dom";
-import { logout } from "../Firebase";
+import { useAuth } from "../context/AuthContext";
 
 const navItems = [
   {
@@ -70,6 +70,7 @@ const navItems = [
 
 export default function LeftSideBar({ user, collapsed, onCollapseToggle, mobileOpen, onMobileClose }) {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const displayName = user?.displayName || "Student";
   const initials = displayName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 

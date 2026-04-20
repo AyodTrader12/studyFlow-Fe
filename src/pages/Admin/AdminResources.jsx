@@ -8,7 +8,6 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useResources } from "../../hook/UseApi";
 import { createResource, deleteResource } from "../../api/ResourceApi";
-// import { auth } from "../../Firebase";
 const SUBJECTS = [
   "Mathematics", "English Language", "Biology", "Chemistry", "Physics",
   "Economics", "Government", "Literature", "Geography", "Agriculture",
@@ -73,11 +72,9 @@ export default function AdminResources() {
       try {
         // We call the backend which uses the YouTube Data API
         // The backend returns metadata and we show a preview
-        const token = await import("../../Firebase")
-          .then(({ auth }) => auth.currentUser?.getIdToken());
         const res = await fetch(
           `${import.meta.env.VITE_API_URL}/api/admin/youtube-preview?url=${encodeURIComponent(url)}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { credentials: "include" }
         );
         if (!res.ok) throw new Error("Could not fetch video details");
         const data = await res.json();

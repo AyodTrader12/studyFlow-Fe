@@ -9,7 +9,7 @@ export default function DashboardTopbar({
   onMenuToggle,
   mobileOpen,
 }) {
-  const displayName = user?.displayName || user?.firebaseUser?.displayName || "Student";
+  const displayName = user?.displayName || "Student";
   const initials    = displayName
     .split(" ")
     .map((n) => n[0])

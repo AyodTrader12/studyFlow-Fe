@@ -48,7 +48,6 @@ export function AuthProvider({ children }) {
       value={{
         user,
         userProfile: user,
-        firebaseUser: null,
         loading,
         isAdmin:     user?.isAdmin  ?? false,
         isVerified:  user?.isVerified ?? false,
