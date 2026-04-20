@@ -349,6 +349,18 @@ function SubjectCard({ subject, totalCount, levelCounts, isOpen, onToggle, onLev
 
       {isOpen && (
         <div className="px-4 pb-4 flex flex-col gap-1 border-t border-gray-50 pt-3">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Select Class Level</p>
+            <button
+              onClick={() => setOpenSubject(null)}
+              className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-200 transition"
+              title="Close"
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1">Junior Secondary</p>
           {JSS_LEVELS.map((level) => (
             <LevelRow key={level} level={level} count={levelCounts[level] || 0}
@@ -450,7 +462,7 @@ export default function Subjects() {
             return (
               <SubjectCard key={subject.name} subject={subject} totalCount={data.total}
                 levelCounts={data.levels} isOpen={openSubject === subject.name}
-                onToggle={() => setOpenSubject((p) => p === subject.name ? null : subject.name)}
+                onToggle={() => setOpenSubject(subject.name)}
                 onLevelClick={handleLevelClick} />
             );
           })}
