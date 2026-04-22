@@ -17,7 +17,7 @@ import {
   XAxis, YAxis, CartesianGrid,
   ResponsiveContainer, Legend,
 } from "recharts";
-import { get } from "../../api/client";
+import { get } from "../../api/client.js";
 
 // ── Color palette ─────────────────────────────────────────────────────────────
 const COLORS = [

@@ -14,6 +14,7 @@ import { FiLock, FiMail, FiUser } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import { updateProfile, changePassword } from "../api/UserApi";
 
+
 export default function SettingsPage() {
   const { user, refreshUser } = useAuth();
 
