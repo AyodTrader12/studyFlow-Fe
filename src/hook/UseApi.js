@@ -3,21 +3,7 @@
 // Components import these hooks — they never call the api files directly.
 
 import { useState, useEffect, useCallback } from "react";
-// import {
-//   getResources,
-//   getResource,
-//   getBookmarks,
-//   addBookmark,
-//   removeBookmark,
-//   getProgress,
-//   getProgressStats,
-//   markResourceViewed,
-//   getReminders,
-//   createReminder,
-//   deleteReminder,
-//   getSummary,
-//   generateSummary,
-// } from "../servi";
+
 import { getResources,getResource } from "../api/ResourceApi";
 import { getBookmarks, addBookmark, removeBookmark } from "../api/BookMarkApi";
 import { getProgress, getProgressStats, markResourceViewed } from "../api/Progress";
