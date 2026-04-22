@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import logo from "../assets/footerLogo.png"
+import logo from "../assets/footerLogo.png";
 const quickLinks = [
   { label: "Home", to: "/" },
   { label: "About", to: "/about" },
