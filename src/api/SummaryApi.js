@@ -2,7 +2,7 @@
 // All endpoints for Gemini AI-generated study summaries.
 // Summaries are cached in MongoDB — the same resource is never sent to Gemini twice.
 
-import { get, post } from "./Client.js";
+import { get, post } from "./client";
 
 /**
  * Fetch a cached summary for a resource.

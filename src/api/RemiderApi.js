@@ -2,7 +2,7 @@
 // All endpoints for creating and managing study reminders.
 // The backend cron job reads these and sends reminder emails at the right time.
 
-import { get, post, del } from "./Client.js";
+import { get, post, del } from "./client";
 
 /** Get all reminders for the current user, sorted by date + time. */
 export const getReminders = () =>

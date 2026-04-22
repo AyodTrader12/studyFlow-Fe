@@ -1,7 +1,7 @@
 // src/services/api/resourceApi.js
 // All endpoints for browsing and managing study resources.
 
-import { get, post, patch, del } from "./Client.js";
+import { get, post, patch, del } from "./client";
 
 /**
  * List resources with optional filters.

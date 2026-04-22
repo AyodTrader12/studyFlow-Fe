@@ -1,7 +1,7 @@
 // src/services/api/progressApi.js
 // All endpoints for tracking study progress and streaks.
 
-import { get, post } from "./Client.js";
+import { get, post } from "./client";
 
 /** Get the full list of resources this user has viewed. */
 export const getProgress = () =>
