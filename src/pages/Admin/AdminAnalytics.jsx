@@ -17,7 +17,7 @@ import {
   XAxis, YAxis, CartesianGrid,
   ResponsiveContainer, Legend,
 } from "recharts";
-import { get } from "../../api/client.js";
+import { get } from "../../api/client";
 
 // ── Color palette ─────────────────────────────────────────────────────────────
 const COLORS = [
@@ -187,9 +187,8 @@ export default function AdminAnalytics() {
     signups: d.count,
     views:   data?.viewsPerDay?.[i]?.count ?? 0,
   }));
-
   // ── Pie chart data ────────────────────────────────────────────────────────
-  const pieData = (data?.resourcesBySubject ?? [])
+  const pieData = (data?.resourcesBySubject ?? []) 
     .slice(0, 8)
     .map((d) => ({ name: d.subject, value: d.count }));
 
