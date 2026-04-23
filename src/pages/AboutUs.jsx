@@ -1,37 +1,48 @@
 import React from 'react'
-
 import { NavLink } from "react-router-dom";
 import bg from "../assets/bgimage.jpeg"
+
 const About = () => {
   return (
     <main className="min-h-screen bg-white">
 
-      {/* ── Hero Banner ── */}
-    
-<section style={{
-  backgroundImage: `url(${bg})`,
-  backgroundRepeat: 'no-repeat',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  maxWidth: '100vw',
-  height: '70vh'
-}} className="relative w-full h-[340px] flex items-center justify-center overflow-hidden">
-  {/* Dark overlay */}
-        <div className="absolute inset-0 bg-[#1a2a5e]/65" /> 
-        {/* Text */}
-         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-5xl font-semibold text-white mb-4 leading-snug">
-            Find the Right Study Resources Faster
-          </h1>
-          <p className="text-sm md:text-sm text-blue-100 ">
-            StudyFlow is building a smarter way for students to find, share, and use study resources. Our goal is simple:
-            make learning materials easy to access, organized, and actually useful when it matters most.
-          </p>
+      {/* ── Hero Banner — Text Left, Image Right ── */}
+      <section className="relative w-full flex flex-col md:flex-row" style={{ minHeight: '90vh' }}>
+
+        {/* Left — Navy text panel */}
+        <div className="w-full md:w-1/2 bg-[#1a2a5e] flex items-center px-10 md:px-16 py-20">
+          <div>
+            <span className="text-blue-300 text-sm font-semibold tracking-widest uppercase mb-3">
+              About StudyFlow
+            </span>
+            <h1 className="text-3xl md:text-5xl font-semibold text-white mb-5 leading-tight">
+              Find the Right
+              Study Resources Faster.
+            </h1>
+            <p className="text-blue-100 text-sm md:text-base leading-relaxed max-w-sm">
+              StudyFlow is building a smarter way for students to find, share, and use study resources. Our goal is simple: make learning materials easy to access, organized, and actually useful when it matters most.
+            </p>
+          </div>
         </div>
-</section>
+
+        {/* Right — Background image */}
+        <div className="w-full md:w-1/2 relative" style={{ minHeight: '340px' }}>
+          <img
+            src={bg}
+            alt="StudyFlow"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* Left-edge fade to blend with navy panel */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1a2a5e]/50 to-transparent" />
+        </div>
+
+      </section>
+
+
+      {/* ── Vision / Mission / Values — Unchanged ── */}
       <section className="max-w-6xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-16 text-center">
- 
+
           {/* Our Vision */}
           <div className="flex flex-col items-center gap-4">
             <div className="w-20 h-20 rounded-full bg-white shadow-2xl flex items-center justify-center">
@@ -46,7 +57,7 @@ const About = () => {
               To build the most reliable platform for student-driven learning resources.
             </p>
           </div>
- 
+
           {/* Our Mission */}
           <div className="flex flex-col items-center gap-4">
             <div className="w-20 h-20 rounded-full bg-white shadow-2xl flex items-center justify-center">
@@ -62,7 +73,7 @@ const About = () => {
               To use technology to eliminate the stress of finding academic resources by making them fast, organized, and accessible.
             </p>
           </div>
- 
+
           {/* Our Values */}
           <div className="flex flex-col items-center gap-4">
             <div className="w-20 h-20 rounded-full bg-white shadow-2xl flex items-center justify-center">
@@ -75,73 +86,97 @@ const About = () => {
               Innovation, integrity, and inclusivity guide everything we do as we work to transform learning seamlessly.
             </p>
           </div>
- 
+
         </div>
       </section>
- 
 
-      {/* ── Why The Name StudyFlow ── */}
-      <section className="max-w-6xl mx-auto px-5 pb-24 ">
-        <div className="flex flex-col md:flex-row items-center gap-12">
 
-          {/* Left — stacked screenshots mockup */}
-          <div className="w-full md:w-[44%] flex-shrink-0">
-            <div className="relative rounded-2xl overflow-hidden shadow-xl border border-gray-100">
-              {/* Top green banner card */}
-              <div className="bg-[#1a6b3c] text-white px-6 py-5">
-                <p className="text-lg font-bold leading-snug">
-                  For Every Student,<br />
-                  Every <span className="text-orange-400">Classroom.</span>
-                </p>
-                <p className="text-xs text-green-200 mt-2 leading-relaxed">
-                  Dramatically supply transparent deliverables before backward-comp
-                  internal or "organic" sources. Competently leverage other.
-                </p>
-                <button className="mt-3 px-4 py-1.5 bg-orange-500 text-white text-xs font-bold rounded-md">
-                  Explore Course
-                </button>
+      {/* ── Why The Name StudyFlow — Redesigned ── */}
+      <section className="py-14 bg-[#f8f9ff]">
+        <div className="max-w-6xl mx-auto px-6">
+
+          {/* Section heading */}
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-semibold text-black mb-5 text-gray-900 leading-tight">
+              Why The Name{' '}
+              <span className="relative inline-block">
+                <span className="relative z-10 text-[#1a2a5e]">StudyFlow</span>
+                <span
+                  className="absolute left-0 w-full bg-blue-200/60 rounded"
+                  style={{ bottom: '4px', height: '10px', zIndex: 0 }}
+                />
+              </span>
+              ?
+            </h2>
+          </div>
+
+          {/* Main card */}
+          <div className="rounded-3xl overflow-hidden shadow-xl border border-gray-100 bg-white">
+            <div className="grid grid-cols-1 md:grid-cols-2">
+
+              {/* Left — Navy visual panel */}
+              <div className="bg-[#1a2a5e] p-10 flex flex-col justify-between gap-8">
+
+                <blockquote className="text-2xl font-bold text-white leading-snug border-l-4 border-blue-400 pl-5">
+                  "The best moments happen when things just{' '}
+                  <span className="text-blue-300 italic">flow.</span>"
+                </blockquote>
+
+                {/* Feature pills */}
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { icon: '📚', label: 'Organized Resources' },
+                    { icon: '⚡', label: 'Fast Access' },
+                    { icon: '🎯', label: 'Exam Ready' },
+                    { icon: '🔓', label: 'Always Free' },
+                  ].map((f) => (
+                    <div
+                      key={f.label}
+                      className="flex items-center gap-2 bg-white/10 rounded-xl px-4 py-3"
+                    >
+                      <span style={{ fontSize: '16px' }}>{f.icon}</span>
+                      <span className="text-xs font-semibold text-blue-100">{f.label}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Books image */}
+                <div className="rounded-2xl overflow-hidden h-28">
+                  <img
+                    src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&q=70"
+                    alt="Study books"
+                    className="w-full h-full object-cover opacity-70"
+                  />
+                </div>
               </div>
-              {/* Bottom white card */}
-              <div className="bg-white px-6 py-5 border-t border-gray-100">
-                <p className="text-center text-sm font-semibold text-[#1a2a5e] mb-4">
-                  What We Offer
+
+              {/* Right — Text */}
+              <div className="p-10 flex flex-col justify-center gap-6">
+                <p className="text-gray-700 text-lg leading-relaxed">
+                  In life, the best moments happen when things just flow when there's no friction, no confusion, just clarity and progress.
                 </p>
-                <p className="text-center text-xs text-gray-500 mb-4 font-medium">
-                  For Your Future Learning.
+                <p className="text-gray-500 text-base leading-relaxed">
+                  StudyFlow brings that same feeling to learning, helping students move from{' '}
+                  <span className="font-semibold text-[#1a2a5e]">searching</span> to{' '}
+                  <span className="font-semibold text-[#1a2a5e]">studying</span> without the usual stress, so learning feels natural and continuous.
                 </p>
-                <div className="grid grid-cols-4 gap-2">
-                  {["Online Courses", "Expert Trainer", "Get Certificate", "Life Time Access"].map((item) => (
-                    <div key={item} className="flex flex-col items-center gap-1.5">
-                      <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a6b3c" strokeWidth="2" strokeLinecap="round">
-                          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                        </svg>
-                      </div>
-                      <p className="text-[9px] text-gray-500 text-center leading-tight">{item}</p>
+
+                {/* Stats row */}
+                <div className="grid grid-cols-3 gap-4 mt-4 pt-6 border-t border-gray-100">
+                  {[
+                    { value: '10K+', label: 'Students' },
+                    { value: '500+', label: 'Resources' },
+                    { value: '98%', label: 'Satisfaction' },
+                  ].map((s) => (
+                    <div key={s.label} className="text-center">
+                      <p className="text-2xl font-black text-[#1a2a5e]">{s.value}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{s.label}</p>
                     </div>
                   ))}
                 </div>
               </div>
-              {/* Bottom image strip */}
-              <img
-                src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&q=70"
-                alt="books"
-                className="w-full h-16 object-cover"
-              />
-            </div>
-          </div>
 
-          {/* Right — text */}
-          <div className="w-full md:w-[56%]">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-snug">
-              Why The Name{" "}
-              <span className="text-[#1a2a5e]">StudyFlow</span>
-            </h2>
-            <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
-              In life, the best moments happen when things just flow — when there's no friction, no confusion,
-              just clarity and progress. StudyFlow brings that same feeling to learning, helping students move
-              from searching to studying without the usual stress, so learning feels natural and continuous.
-            </p>
+            </div>
           </div>
 
         </div>
@@ -150,4 +185,5 @@ const About = () => {
     </main>
   );
 }
-export default About
+
+export default About;

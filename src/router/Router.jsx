@@ -35,7 +35,6 @@ import AdminAnalytics from "../pages/Admin/AdminAnalytics";
 
 import AdminRoute from "./AdminRoute";
 import ProtectedRoute from "./ProtectedRoute";
-
 import Forbidden403 from "../pages/error/Forbidden403";
 import NotFound404 from "../pages/error/NotFound404";
 import ServerError500 from "../pages/error/ServerError500";
