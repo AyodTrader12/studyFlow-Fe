@@ -39,10 +39,11 @@ export default function Login() {
 
     setLoading(true);
     try {
-      await login({ email: form.email.trim(), password: form.password });
+      const { user } = await login({ email: form.email.trim(), password: form.password });
       // Refresh AuthContext so the user is available immediately
       await refreshUser();
-      navigate(from, { replace: true });
+      const redirectTo = user?.isAdmin ? "/admin" : from;
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       if (err.status === 403 && err.data?.needsVerify) {
         // Account not verified — send to OTP page
