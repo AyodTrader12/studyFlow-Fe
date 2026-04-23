@@ -4,8 +4,11 @@
 // credentials: "include" tells the browser to send cookies automatically.
 
 export const BASE_URL = import.meta.env.VITE_RENDER_URL 
+console.log('BASE_URL:', BASE_URL); // Debug log
 async function request(path, options = {}) {
-  const res = await fetch(`${BASE_URL}${path}`, {
+  const url = `${BASE_URL}${path}`;
+  console.log('Fetching:', url, options); // Debug log
+  const res = await fetch(url, {
     ...options,
     credentials: "include", // sends the httpOnly cookie automatically
     headers: {
@@ -14,6 +17,7 @@ async function request(path, options = {}) {
     },
   });
 
+  console.log('Response status:', res.status); // Debug log
   const data = await res.json();
 
   if (!res.ok) {
