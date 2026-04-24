@@ -69,27 +69,23 @@ function LevelRow({ level, count, onClick, colorClass }) {
 }
 
 // ── Subject card ──────────────────────────────────────────────────────────────
-function SubjectCard({ subject, totalCount, levelCounts, isOpen, onToggle, onLevelClick }) {
+function SubjectCard({ subject, totalCount, levelCounts, onCardClick }) {
   const c = COLOR_MAP[subject.color] || COLOR_MAP.blue;
 
   return (
-    <div className={`rounded-2xl border transition-all duration-200 overflow-hidden bg-white ${
-      isOpen ? `${c.border} shadow-md` : "border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200"
-    }`}>
+    <div className={`rounded-2xl border transition-all duration-200 overflow-hidden bg-white border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200`}>
 
-      {/* Card header — always visible */}
+      {/* Card header — clickable to navigate */}
       <button
-        onClick={onToggle}
+        onClick={onCardClick}
         className="w-full flex items-center gap-4 p-4 text-left"
       >
-        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 transition ${
-          isOpen ? c.bg : "bg-gray-50"
-        }`}>
+        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 bg-gray-50`}>
           {subject.emoji}
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className={`text-sm font-bold transition ${isOpen ? c.text : "text-[#1a2a5e]"}`}>
+          <p className="text-sm font-bold text-[#1a2a5e]">
             {subject.name}
           </p>
           <p className="text-[11px] text-gray-400 mt-0.5">
@@ -100,67 +96,13 @@ function SubjectCard({ subject, totalCount, levelCounts, isOpen, onToggle, onLev
           </p>
         </div>
 
-        <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors flex-shrink-0 ${
-          isOpen ? c.bg : "bg-gray-50"
-        }`}>
-          <svg
-            width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke={isOpen ? "currentColor" : "#9ca3af"}
-            strokeWidth="2.5" strokeLinecap="round"
-            className={`transition-transform duration-300 ${isOpen ? `rotate-180 ${c.text}` : ""}`}
-          >
-            <path d="M6 9l6 6 6-6"/>
+        <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-gray-50 flex-shrink-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round">
+            <path d="M9 18l6-6-6-6"/>
           </svg>
         </div>
       </button>
-
-      {/* Expanded content — only rendered when open */}
-      {isOpen && (
-        <div className="px-4 pb-4 flex flex-col gap-1 border-t border-gray-50 pt-3">
-          {(subject.levels === "jss" || subject.levels === "both") && (
-            <>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1">
-                Junior Secondary
-              </p>
-              {JSS_LEVELS.map((level) => (
-                <LevelRow
-                  key={level}
-                  level={level}
-                  count={levelCounts[level] || 0}
-                  onClick={() => onLevelClick(subject.name, level)}
-                  colorClass={c}
-                />
-              ))}
-            </>
-          )}
-
-          {subject.levels === "both" && <div className="border-t border-gray-100 my-2" />}
-
-          {(subject.levels === "ss" || subject.levels === "both") && (
-            <>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1">
-                Senior Secondary
-              </p>
-              {SS_LEVELS.map((level) => (
-                <LevelRow
-                  key={level}
-                  level={level}
-                  count={levelCounts[level] || 0}
-                  onClick={() => onLevelClick(subject.name, level)}
-                  colorClass={c}
-                />
-              ))}
-            </>
-          )}
-
-          <button
-            onClick={() => onLevelClick(subject.name, "All Levels")}
-            className={`mt-2 w-full py-2.5 rounded-xl text-sm font-bold transition ${c.bg} ${c.text} hover:opacity-90`}
-          >
-            View all {subject.name} resources →
-          </button>
-        </div>
-      )}
     </div>
   );
 }
@@ -169,10 +111,6 @@ function SubjectCard({ subject, totalCount, levelCounts, isOpen, onToggle, onLev
 export default function DashboardSubjects() {
   const navigate = useNavigate();
 
-  // openSubject holds exactly ONE subject name string, or null.
-  // Only the card whose subject.name === openSubject will render as expanded.
-  // Every other card stays collapsed regardless of its position in the grid.
-  const [openSubject,  setOpenSubject]  = useState(null);
   const [subjectData,  setSubjectData]  = useState({});
   const [loading,      setLoading]      = useState(true);
   const [searchTerm,   setSearchTerm]   = useState("");
@@ -200,10 +138,9 @@ export default function DashboardSubjects() {
     fetchCounts();
   }, []);
 
-  // Toggle: if clicking the already-open card → close it (set to null)
-  // If clicking a different card → open that one (and the previous one closes)
-  const handleToggle = (subjectName) => {
-    setOpenSubject((prev) => (prev === subjectName ? null : subjectName));
+  // Click subject card to navigate to all resources for that subject
+  const handleCardClick = (subjectName) => {
+    navigate(`/dashboard/resources?subject=${encodeURIComponent(subjectName)}`);
   };
 
   const handleLevelClick = (subject, level) => {
@@ -270,47 +207,20 @@ export default function DashboardSubjects() {
         </div>
       )}
 
-      {/* ── THE FIX ──────────────────────────────────────────────────────────
-          Instead of one flat grid, we render subjects one by one.
-          Each card decides its own column span:
-          - Closed card → sits inside the 3-column grid normally
-          - Open card   → breaks OUT of the grid into its own full-width row
-                          so no other card in the same row is affected
-
-          How it works:
-          We keep the grid container but give each item its own wrapper div.
-          When openSubject === subject.name we apply "col-span-full" which
-          makes that card span all 3 columns, pushing it into its own row.
-          All other cards stay in their normal 1-column slots.
-
-          This means:
-          - Opening Mathematics only opens Mathematics
-          - Closing Mathematics (clicking it again) collapses only Mathematics
-          - No other card is ever affected
-      ──────────────────────────────────────────────────────────────────── */}
+      {/* Subject cards */}
       {!loading && filtered.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((subject) => {
             const data   = subjectData[subject.name] || { total: 0, levels: {} };
-            const isOpen = openSubject === subject.name;
 
             return (
-              // col-span-full when open → card occupies the full row width
-              // This is the key fix — it completely removes the card from the
-              // 3-column layout when it expands, so adjacent cards are unaffected
-              <div
+              <SubjectCard
                 key={subject.name}
-                className={isOpen ? "col-span-1 sm:col-span-2 lg:col-span-3" : "col-span-1"}
-              >
-                <SubjectCard
-                  subject={subject}
-                  totalCount={data.total}
-                  levelCounts={data.levels}
-                  isOpen={isOpen}
-                  onToggle={() => handleToggle(subject.name)}
-                  onLevelClick={handleLevelClick}
-                />
-              </div>
+                subject={subject}
+                totalCount={data.total}
+                levelCounts={data.levels}
+                onCardClick={() => handleCardClick(subject.name)}
+              />
             );
           })}
         </div>
