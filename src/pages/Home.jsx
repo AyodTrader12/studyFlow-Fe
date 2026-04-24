@@ -97,7 +97,7 @@ const Home = () => {
 
   return (
     <div>
-      <section className="bg-gray-50 py-4 sm:py-5 lg:py-5">
+      <section className="bg-gray-50 py-12 sm:py-5 lg:py-5">
       <div className="max-w-6xl mx-auto px-5 ">
         
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
