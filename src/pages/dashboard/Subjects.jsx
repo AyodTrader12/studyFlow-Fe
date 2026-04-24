@@ -10,19 +10,19 @@ import { useNavigate } from "react-router-dom";
 import { getResources } from "../../api/ResourceApi";
 
 const SUBJECTS = [
-  { name: "Mathematics",         emoji: "📐", color: "blue" },
-  { name: "English Language",    emoji: "📖", color: "green" },
-  { name: "Biology",             emoji: "🔬", color: "teal" },
-  { name: "Chemistry",           emoji: "⚗️", color: "purple" },
-  { name: "Physics",             emoji: "⚡", color: "yellow" },
-  { name: "Economics",           emoji: "📊", color: "orange" },
-  { name: "Government",          emoji: "🏛️", color: "red" },
-  { name: "Literature",          emoji: "📜", color: "pink" },
-  { name: "Geography",           emoji: "🌍", color: "green" },
-  { name: "Agriculture",         emoji: "🌱", color: "teal" },
-  { name: "Further Mathematics", emoji: "🧮", color: "blue" },
-  { name: "Civic Education",     emoji: "🤝", color: "orange" },
-  { name: "Commerce",            emoji: "💼", color: "purple" },
+  { name: "Mathematics",         emoji: "📐", color: "blue",   levels: "both" },
+  { name: "English Language",    emoji: "📖", color: "green",  levels: "both" },
+  { name: "Biology",             emoji: "🔬", color: "teal",   levels: "ss" },
+  { name: "Chemistry",           emoji: "⚗️", color: "purple", levels: "ss" },
+  { name: "Physics",             emoji: "⚡", color: "yellow",  levels: "ss" },
+  { name: "Economics",           emoji: "📊", color: "orange", levels: "ss" },
+  { name: "Government",          emoji: "🏛️", color: "red",    levels: "ss" },
+  { name: "Literature",          emoji: "📜", color: "pink",   levels: "ss" },
+  { name: "Geography",           emoji: "🌍", color: "green",  levels: "both" },
+  { name: "Agriculture",         emoji: "🌱", color: "teal",   levels: "both" },
+  { name: "Further Mathematics", emoji: "🧮", color: "blue",   levels: "ss" },
+  { name: "Civic Education",     emoji: "🤝", color: "orange", levels: "both" },
+  { name: "Commerce",            emoji: "💼", color: "purple", levels: "ss" },
 ];
 
 const JSS_LEVELS = ["JSS1", "JSS2", "JSS3"];
@@ -117,33 +117,41 @@ function SubjectCard({ subject, totalCount, levelCounts, isOpen, onToggle, onLev
       {/* Expanded content — only rendered when open */}
       {isOpen && (
         <div className="px-4 pb-4 flex flex-col gap-1 border-t border-gray-50 pt-3">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1">
-            Junior Secondary
-          </p>
-          {JSS_LEVELS.map((level) => (
-            <LevelRow
-              key={level}
-              level={level}
-              count={levelCounts[level] || 0}
-              onClick={() => onLevelClick(subject.name, level)}
-              colorClass={c}
-            />
-          ))}
+          {(subject.levels === "jss" || subject.levels === "both") && (
+            <>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1">
+                Junior Secondary
+              </p>
+              {JSS_LEVELS.map((level) => (
+                <LevelRow
+                  key={level}
+                  level={level}
+                  count={levelCounts[level] || 0}
+                  onClick={() => onLevelClick(subject.name, level)}
+                  colorClass={c}
+                />
+              ))}
+            </>
+          )}
 
-          <div className="border-t border-gray-100 my-2" />
+          {subject.levels === "both" && <div className="border-t border-gray-100 my-2" />}
 
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1">
-            Senior Secondary
-          </p>
-          {SS_LEVELS.map((level) => (
-            <LevelRow
-              key={level}
-              level={level}
-              count={levelCounts[level] || 0}
-              onClick={() => onLevelClick(subject.name, level)}
-              colorClass={c}
-            />
-          ))}
+          {(subject.levels === "ss" || subject.levels === "both") && (
+            <>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1">
+                Senior Secondary
+              </p>
+              {SS_LEVELS.map((level) => (
+                <LevelRow
+                  key={level}
+                  level={level}
+                  count={levelCounts[level] || 0}
+                  onClick={() => onLevelClick(subject.name, level)}
+                  colorClass={c}
+                />
+              ))}
+            </>
+          )}
 
           <button
             onClick={() => onLevelClick(subject.name, "All Levels")}
