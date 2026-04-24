@@ -7,7 +7,7 @@ import { useState, useRef } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { resetPassword, resendOtp } from "../../api/UserApi";
 import logo from "../../assets/studylogo.png"
-import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
 export default function ResetPassword() {
   const navigate  = useNavigate();
   const location  = useLocation();
@@ -67,12 +67,7 @@ export default function ResetPassword() {
       await resetPassword({ email, otp, newPassword: newPwd });
       navigate("/auth/login", { state: { passwordReset: true } });
     } catch (err) {
-      Swal.fire({
-        title: 'Reset Failed',
-        text: err.message || "Reset failed. Please try again.",
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      toast.error(err.message || "Reset failed. Please try again.");
       setDigits(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
     } finally {
@@ -89,12 +84,7 @@ export default function ResetPassword() {
       inputRefs.current[0]?.focus();
       setError("");
     } catch (err) {
-      Swal.fire({
-        title: 'Resend Failed',
-        text: err.message || "Failed to resend.",
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      toast.error(err.message || "Failed to resend.");
     } finally {
       setResending(false);
     }

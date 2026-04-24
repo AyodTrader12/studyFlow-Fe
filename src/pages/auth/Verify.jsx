@@ -6,7 +6,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { verifyOtp, resendOtp } from "../../api/UserApi";
-import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
 
 const RESEND_COUNTDOWN = 60; // seconds before resend is available
 
@@ -107,12 +107,7 @@ export default function Verify() {
       setSuccess("Email verified! Redirecting to login...");
       setTimeout(() => navigate("/auth/login", { state: { verified: true } }), 1500);
     } catch (err) {
-      Swal.fire({
-        title: 'Verification Failed',
-        text: err.message || "Verification failed. Please try again.",
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      toast.error(err.message || "Verification failed. Please try again.");
       // Clear digits on error so student can re-enter
       setDigits(["", "", "", "", "", ""]);
       focusInput(0);
@@ -133,12 +128,7 @@ export default function Verify() {
       setSuccess("A new code has been sent to your email.");
       setTimeout(() => setSuccess(""), 4000);
     } catch (err) {
-      Swal.fire({
-        title: 'Resend Failed',
-        text: err.message || "Failed to resend. Please try again.",
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      toast.error(err.message || "Failed to resend.");
     } finally {
       setResending(false);
     }

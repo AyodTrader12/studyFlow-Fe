@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { forgotPassword } from "../../api/UserApi";
 import logo from "../../assets/studylogo.png"
-import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
 
 export function ForgotPassword() {
   const navigate = useNavigate();
@@ -23,12 +23,7 @@ export function ForgotPassword() {
       // Navigate to reset page passing the email
       navigate("/reset-password", { state: { email: email.trim() } });
     } catch (err) {
-      Swal.fire({
-        title: 'Failed to Send Code',
-        text: err.message || "Failed to send code. Please try again.",
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      toast.error(err.message || "Failed to send code. Please try again.");
     } finally {
       setLoading(false);
     }

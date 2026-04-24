@@ -7,7 +7,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { login } from "../../api/UserApi";
 import { useAuth } from "../../context/AuthContext";
 import logo from "../../assets/studylogo.png"
-import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
 
 export default function Login() {
   const navigate  = useNavigate();
@@ -55,12 +55,7 @@ export default function Login() {
         err.status === 401
           ? "Invalid email or password."
           : err.message || "Login failed. Please try again.";
-      Swal.fire({
-        title: 'Login Failed',
-        text: msg,
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

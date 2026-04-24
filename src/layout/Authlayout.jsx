@@ -1,5 +1,6 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 
 const Authlayout = () => {
   return (
@@ -7,6 +8,7 @@ const Authlayout = () => {
       <div className="flex-1 overflow-y-auto">
         <Outlet/>
       </div>
+      <Toaster />
    
       
             

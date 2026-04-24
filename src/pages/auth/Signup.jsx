@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signUp } from "../../api/UserApi";
 import logo from "../../assets/studylogo.png"
-import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -53,12 +53,7 @@ export default function SignUp() {
         err.status === 409
           ? "An account with this email already exists."
           : err.message || "Something went wrong. Please try again.";
-      Swal.fire({
-        title: 'Sign Up Failed',
-        text: msg,
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
