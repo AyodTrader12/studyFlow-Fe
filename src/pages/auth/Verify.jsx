@@ -6,6 +6,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { verifyOtp, resendOtp } from "../../api/UserApi";
+import Swal from 'sweetalert2';
 
 const RESEND_COUNTDOWN = 60; // seconds before resend is available
 
@@ -106,7 +107,12 @@ export default function Verify() {
       setSuccess("Email verified! Redirecting to login...");
       setTimeout(() => navigate("/auth/login", { state: { verified: true } }), 1500);
     } catch (err) {
-      setError(err.message || "Verification failed. Please try again.");
+      Swal.fire({
+        title: 'Verification Failed',
+        text: err.message || "Verification failed. Please try again.",
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
       // Clear digits on error so student can re-enter
       setDigits(["", "", "", "", "", ""]);
       focusInput(0);
@@ -127,7 +133,12 @@ export default function Verify() {
       setSuccess("A new code has been sent to your email.");
       setTimeout(() => setSuccess(""), 4000);
     } catch (err) {
-      setError(err.message || "Failed to resend. Please try again.");
+      Swal.fire({
+        title: 'Resend Failed',
+        text: err.message || "Failed to resend. Please try again.",
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     } finally {
       setResending(false);
     }
@@ -174,13 +185,6 @@ export default function Verify() {
           {success && (
             <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm font-medium text-center">
               {success}
-            </div>
-          )}
-
-          {/* Error message */}
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm text-center">
-              {error}
             </div>
           )}
 

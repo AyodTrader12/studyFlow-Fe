@@ -2,10 +2,12 @@
 // Step 2: Student enters the 6-digit reset OTP + their new password.
 // Redirects to login on success.
 
+
 import { useState, useRef } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { resetPassword, resendOtp } from "../../api/UserApi";
 import logo from "../../assets/studylogo.png"
+import Swal from 'sweetalert2';
 export default function ResetPassword() {
   const navigate  = useNavigate();
   const location  = useLocation();
@@ -18,6 +20,7 @@ export default function ResetPassword() {
   const [resending, setResending] = useState(false);
   const [error,     setError]     = useState("");
   const [showPwd,   setShowPwd]   = useState(false);
+  const [showConfirmPwd, setShowConfirmPwd] = useState(false);
 
   const inputRefs = useRef([]);
 
@@ -62,9 +65,14 @@ export default function ResetPassword() {
     setError("");
     try {
       await resetPassword({ email, otp, newPassword: newPwd });
-      navigate("auth/login", { state: { passwordReset: true } });
+      navigate("/auth/login", { state: { passwordReset: true } });
     } catch (err) {
-      setError(err.message || "Reset failed. Please try again.");
+      Swal.fire({
+        title: 'Reset Failed',
+        text: err.message || "Reset failed. Please try again.",
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
       setDigits(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
     } finally {
@@ -81,7 +89,12 @@ export default function ResetPassword() {
       inputRefs.current[0]?.focus();
       setError("");
     } catch (err) {
-      setError(err.message || "Failed to resend.");
+      Swal.fire({
+        title: 'Resend Failed',
+        text: err.message || "Failed to resend.",
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     } finally {
       setResending(false);
     }
@@ -104,10 +117,6 @@ export default function ResetPassword() {
           <p className="text-gray-500 text-sm mb-6">
             Enter the 6-digit code sent to <strong className="text-[#1a2a5e]">{email}</strong> and your new password.
           </p>
-
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">{error}</div>
-          )}
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
 
@@ -167,15 +176,34 @@ export default function ResetPassword() {
             {/* Confirm */}
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1.5">Confirm New Password</label>
-              <input
-                type="password"
-                placeholder="Repeat new password"
-                value={confirmPwd}
-                onChange={(e) => setConfirmPwd(e.target.value)}
-                className={`w-full px-4 py-3 rounded-xl border text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-[#1a2a5e]/50 transition ${
-                  confirmPwd && confirmPwd !== newPwd ? "border-red-300 bg-red-50" : "border-gray-200"
-                }`}
-              />
+              <div className="relative">
+                <input
+                  type={showConfirmPwd ? "text" : "password"}
+                  placeholder="Repeat new password"
+                  value={confirmPwd}
+                  onChange={(e) => setConfirmPwd(e.target.value)}
+                  className={`w-full px-4 py-3 rounded-xl border text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-[#1a2a5e]/50 transition pr-10 ${
+                    confirmPwd && confirmPwd !== newPwd ? "border-red-300 bg-red-50" : "border-gray-200"
+                  }`}
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => setShowConfirmPwd((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#1a2a5e] transition"
+                >
+                  {showConfirmPwd ? (
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+                      <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                  ) : (
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
 
             <button type="submit" disabled={loading}

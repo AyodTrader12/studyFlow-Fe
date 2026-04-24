@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { forgotPassword } from "../../api/UserApi";
 import logo from "../../assets/studylogo.png"
+import Swal from 'sweetalert2';
 
 export function ForgotPassword() {
   const navigate = useNavigate();
@@ -22,7 +23,12 @@ export function ForgotPassword() {
       // Navigate to reset page passing the email
       navigate("/reset-password", { state: { email: email.trim() } });
     } catch (err) {
-      setError(err.message || "Failed to send code. Please try again.");
+      Swal.fire({
+        title: 'Failed to Send Code',
+        text: err.message || "Failed to send code. Please try again.",
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     } finally {
       setLoading(false);
     }
@@ -46,10 +52,6 @@ export function ForgotPassword() {
           <p className="text-gray-500 text-sm mb-6 leading-relaxed">
             Enter your email address and we will send you a 6-digit code to reset your password.
           </p>
-
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">{error}</div>
-          )}
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
             <div>

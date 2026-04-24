@@ -7,6 +7,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { login } from "../../api/UserApi";
 import { useAuth } from "../../context/AuthContext";
 import logo from "../../assets/studylogo.png"
+import Swal from 'sweetalert2';
 
 export default function Login() {
   const navigate  = useNavigate();
@@ -54,7 +55,12 @@ export default function Login() {
         err.status === 401
           ? "Invalid email or password."
           : err.message || "Login failed. Please try again.";
-      setErrors({ general: msg });
+      Swal.fire({
+        title: 'Login Failed',
+        text: msg,
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     } finally {
       setLoading(false);
     }
@@ -95,12 +101,6 @@ export default function Login() {
               Sign up free
             </Link>
           </p>
-
-          {errors.general && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
-              {errors.general}
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
 

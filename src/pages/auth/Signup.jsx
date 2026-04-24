@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signUp } from "../../api/UserApi";
 import logo from "../../assets/studylogo.png"
+import Swal from 'sweetalert2';
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function SignUp() {
   const [errors,  setErrors]  = useState({});
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
+  const [showConfirmPwd, setShowConfirmPwd] = useState(false);
 
   const validate = () => {
     const e = {};
@@ -51,7 +53,12 @@ export default function SignUp() {
         err.status === 409
           ? "An account with this email already exists."
           : err.message || "Something went wrong. Please try again.";
-      setErrors({ general: msg });
+      Swal.fire({
+        title: 'Sign Up Failed',
+        text: msg,
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     } finally {
       setLoading(false);
     }
@@ -86,12 +93,6 @@ export default function SignUp() {
               Log in
             </Link>
           </p>
-
-          {errors.general && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
-              {errors.general}
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
 
@@ -156,14 +157,33 @@ export default function SignUp() {
 
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1.5">Confirm Password</label>
-              <input
-                name="confirmPassword"
-                type="password"
-                placeholder="Repeat your password"
-                value={form.confirmPassword}
-                onChange={handleChange}
-                className={inputClass("confirmPassword")}
-              />
+              <div className="relative">
+                <input
+                  name="confirmPassword"
+                  type={showConfirmPwd ? "text" : "password"}
+                  placeholder="Repeat your password"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  className={`${inputClass("confirmPassword")} pr-10`}
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => setShowConfirmPwd((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#1a2a5e] transition"
+                >
+                  {showConfirmPwd ? (
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+                      <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                  ) : (
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
               {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
             </div>
 
