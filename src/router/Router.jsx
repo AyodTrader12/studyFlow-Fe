@@ -79,7 +79,7 @@ export const router = createBrowserRouter([
       { path: "resource", element: <ResourceViewer /> },
       { path: "progress", element: <DashboardProgress /> },
       { path: "resource-view/:id", element: <ResourceViewer /> },
-      { path: "resource-page", element: <ResourcesPage /> },
+      { path: "resources", element: <ResourcesPage /> },
       { path: "past-question-browser", element: <PastQuestionsBrowser /> },
       { path: "past-question-viewer/:id", element: <PastQuestionViewer /> },
     ],

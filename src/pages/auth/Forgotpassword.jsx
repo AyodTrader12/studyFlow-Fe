@@ -37,7 +37,7 @@ export function ForgotPassword() {
   <img 
     src={logo} 
     alt="StudyFlow Logo" 
-    className="h-9 w-auto"   // Adjust height as needed (h-8, h-10, h-12 etc.)
+    className="h-12 w-auto"   // Adjust height as needed (h-8, h-10, h-12 etc.)
   />
 
 </div>
