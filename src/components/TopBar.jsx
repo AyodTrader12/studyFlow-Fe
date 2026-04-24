@@ -73,8 +73,6 @@ export default function DashboardTopbar({
           </svg>
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
         </button> */}
-
-
         <div className="w-9 h-9 rounded-xl bg-[#1a2a5e] flex items-center justify-center text-white text-xs font-bold cursor-pointer select-none">
           {initials}
         </div>
@@ -82,3 +80,4 @@ export default function DashboardTopbar({
     </header>
   );
 }
+

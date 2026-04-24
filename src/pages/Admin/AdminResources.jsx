@@ -72,7 +72,7 @@ export default function AdminResources() {
       try {
         // We call the backend which uses the YouTube Data API
         // The backend returns metadata and we show a preview
-        const res = await fetch(
+         const res = await fetch(
           `${import.meta.env.VITE_API_URL}/api/admin/youtube-preview?url=${encodeURIComponent(url)}`,
           { credentials: "include" }
         );
