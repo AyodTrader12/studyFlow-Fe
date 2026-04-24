@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { verifyOtp, resendOtp } from "../../api/UserApi";
 import toast from 'react-hot-toast';
+import logo from "../../assets/studylogo.png"
 
 const RESEND_COUNTDOWN = 60; // seconds before resend is available
 
@@ -141,13 +142,13 @@ export default function Verify() {
       <div className="w-full max-w-md">
 
         {/* Logo */}
-        <div className="flex items-center justify-center gap-2 mb-8">
-          <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
-            <path d="M8 12C8 10.3 9.3 9 11 9H24V39H11C9.3 39 8 37.7 8 36V12Z" fill="#1a2a5e"/>
-            <path d="M40 12C40 10.3 38.7 9 37 9H24V39H37C38.7 39 40 37.7 40 36V12Z" fill="#1a2a5e" opacity="0.7"/>
-          </svg>
-          <span className="text-xl font-extrabold text-[#1a2a5e]">StudyFlow</span>
-        </div>
+      <div className="flex items-center justify-center gap-2 mb-8">
+        <img 
+          src={logo} 
+          alt="StudyFlow Logo" 
+          className="h-12 w-auto"  
+        />
+      </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 px-8 py-8">
 

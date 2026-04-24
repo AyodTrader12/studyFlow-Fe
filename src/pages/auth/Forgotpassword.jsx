@@ -39,7 +39,7 @@ export function ForgotPassword() {
     alt="StudyFlow Logo" 
     className="h-9 w-auto"   // Adjust height as needed (h-8, h-10, h-12 etc.)
   />
-  <span className="text-xl font-extrabold text-[#1a2a5e]">StudyFlow</span>
+
 </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 px-8 py-8">
