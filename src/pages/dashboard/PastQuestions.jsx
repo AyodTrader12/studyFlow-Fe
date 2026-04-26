@@ -243,7 +243,7 @@ export default function PastQuestions() {
       )}
 
       {/* Admin hint */}
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 flex gap-3">
+      {/* <div className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 flex gap-3">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b45309" strokeWidth="2" strokeLinecap="round" className="flex-shrink-0 mt-0.5">
           <circle cx="12" cy="12" r="10"/>
           <line x1="12" y1="8" x2="12" y2="12"/>
@@ -256,7 +256,7 @@ export default function PastQuestions() {
             Go to Admin → Past Questions tab to upload PDF links with their exam body, subject and year.
           </p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
