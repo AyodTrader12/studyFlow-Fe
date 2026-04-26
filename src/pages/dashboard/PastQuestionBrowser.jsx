@@ -189,7 +189,7 @@ export default function PastQuestionsBrowser() {
                 <YearCard
                   key={q._id}
                   question={q}
-                  onClick={() => navigate(`/dashboard/past-questions/${q._id}`)}
+                  onClick={() => navigate(`/dashboard/past-question-viewer/${q._id}`)}
                 />
               ))}
           </div>
@@ -208,7 +208,7 @@ export default function PastQuestionsBrowser() {
                     <YearCard
                       key={q._id}
                       question={q}
-                      onClick={() => navigate(`/dashboard/past-questions/${q._id}`)}
+                      onClick={() => navigate(`/dashboard/past-question-viewer/${q._id}`)}
                     />
                   ))}
                 </div>
